@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeeW — Data Analytics Career Strategy 2025–2027</title>
+<style>
+  :root {
+    --bg: #090c12;
+    --bg2: #0f1318;
+    --bg3: #151a22;
+    --bg4: #1c2230;
+    --border: #1e2535;
+    --border2: #283044;
+    --text: #dde2ef;
+    --text2: #8b93aa;
+    --text3: #4e5770;
+    --green: #16c47f;
+    --green2: #0d9e67;
+    --blue: #3b82f6;
+    --blue2: #1d68d9;
+    --amber: #f59e0b;
+    --amber2: #d97706;
+    --red: #ef4444;
+    --purple: #8b5cf6;
+    --teal: #06b6d4;
+    --mono: 'Courier New', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:200;background:rgba(9,12,18,0.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:52px;}
+  .nav-brand{font-size:13px;font-weight:700;color:var(--text);letter-spacing:0.03em;display:flex;align-items:center;gap:8px;}
+  .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
+  .nav-links{display:flex;gap:4px;}
+  .nav-link{font-size:12px;color:var(--text3);padding:5px 10px;border-radius:5px;cursor:pointer;transition:all 0.15s;border:none;background:transparent;}
+  .nav-link:hover{color:var(--text);background:var(--bg3);}
+  .nav-link.active{color:var(--green);background:rgba(22,196,127,0.08);}
+
+  /* HERO */
+  .hero{padding:64px 32px 48px;max-width:900px;margin:0 auto;}
+  .hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .hero-eyebrow::after{content:'';flex:1;height:1px;background:var(--border2);}
+  .hero-title{font-size:36px;font-weight:700;line-height:1.15;margin-bottom:16px;letter-spacing:-0.02em;}
+  .hero-title span{color:var(--green);}
+  .hero-sub{font-size:15px;color:var(--text2);max-width:600px;line-height:1.7;margin-bottom:32px;}
+  .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .hstat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .hstat-val{font-size:26px;font-weight:700;line-height:1;margin-bottom:4px;}
+  .hstat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;}
+  .v-green{color:var(--green);}
+  .v-blue{color:var(--blue);}
+  .v-amber{color:var(--amber);}
+  .v-purple{color:var(--purple);}
+
+  /* SECTION */
+  section{padding:48px 32px;max-width:900px;margin:0 auto;}
+  .section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--text3);margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* INCOME TIMELINE */
+  .income-timeline{position:relative;padding:24px 0;}
+  .it-track{position:relative;height:4px;background:var(--border2);border-radius:2px;margin-bottom:40px;}
+  .it-fill{position:absolute;left:0;top:0;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--green2),var(--green),var(--blue));width:100%;}
+  .it-nodes{display:flex;justify-content:space-between;position:relative;margin-top:-20px;}
+  .it-node{display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+  .it-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--bg);margin-bottom:10px;transition:transform 0.2s;}
+  .it-node:hover .it-dot{transform:scale(1.4);}
+  .it-node-label{font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap;}
+  .it-node-pay{font-size:13px;font-weight:700;margin-top:3px;}
+  .it-node-time{font-size:10px;color:var(--text3);margin-top:2px;}
+
+  /* PHASE CARDS */
+  .phase-section{margin-bottom:32px;}
+  .phase-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .phase-num{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-right:10px;}
+  .phase-title-row{display:flex;align-items:center;}
+  .phase-name{font-size:15px;font-weight:600;color:var(--text);}
+  .phase-sub{font-size:12px;color:var(--text3);margin-top:1px;}
+  .phase-pay{font-size:13px;font-weight:700;padding:4px 12px;border-radius:20px;}
+
+  /* ROLE GRID */
+  .role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+  .role-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;transition:border-color 0.15s;}
+  .role-card:hover{border-color:var(--border2);}
+  .role-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+  .role-company{font-size:11px;color:var(--text3);margin-bottom:6px;}
+  .role-pay-row{display:flex;align-items:center;justify-content:space-between;}
+  .role-salary{font-size:12px;font-weight:600;}
+  .role-avail{font-size:10px;padding:2px 7px;border-radius:20px;}
+  .avail-hot{background:rgba(22,196,127,0.12);color:var(--green);}
+  .avail-mid{background:rgba(59,130,246,0.12);color:var(--blue);}
+  .avail-comp{background:rgba(245,158,11,0.12);color:var(--amber);}
+
+  /* SKILLS */
+  .skills-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+  .sk{font-size:10px;padding:3px 9px;border-radius:20px;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);}
+  .sk-req{border-color:var(--green2);color:var(--green);}
+
+  /* TIMELINE ACTIONS */
+  .action-list{display:flex;flex-direction:column;gap:0;}
+  .action-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);}
+  .action-item:last-child{border-bottom:none;}
+  .action-month{min-width:110px;flex-shrink:0;}
+  .action-month-label{font-size:11px;font-weight:700;color:var(--text);line-height:1.2;}
+  .action-month-pay{font-size:12px;font-weight:700;margin-top:4px;}
+  .action-body{flex:1;}
+  .action-tasks{list-style:none;}
+  .action-tasks li{font-size:12px;color:var(--text2);padding:2px 0;display:flex;gap:8px;line-height:1.5;}
+  .action-tasks li::before{content:'→';color:var(--text3);flex-shrink:0;}
+  .action-tasks li strong{color:var(--text);}
+  .action-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+  .status-now{background:rgba(22,196,127,0.12);color:var(--green);}
+  .status-soon{background:rgba(59,130,246,0.1);color:var(--blue);}
+  .status-later{background:rgba(245,158,11,0.1);color:var(--amber);}
+  .status-future{background:rgba(139,92,246,0.1);color:var(--purple);}
+
+  /* JOB BOARDS */
+  .jb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .jb-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .jb-rank{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+  .jb-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;}
+  .jb-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px;}
+  .jb-search{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:6px 10px;font-size:11px;font-family:var(--mono);color:var(--text3);margin-bottom:8px;}
+  .jb-tags{display:flex;flex-wrap:wrap;gap:4px;}
+  .jb-tag{font-size:10px;padding:2px 7px;border-radius:20px;background:var(--bg4);color:var(--text3);}
+
+  /* FREELANCE */
+  .fl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .fl-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+  .fl-platform{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:8px;}
+  .fl-gig{font-size:12px;color:var(--text);font-weight:500;margin-bottom:4px;line-height:1.4;}
+  .fl-rate{font-size:14px;font-weight:700;color:var(--green);margin-bottom:4px;}
+  .fl-when{font-size:10px;color:var(--text3);}
+  .fl-note{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.6;}
+
+  /* POSITIONING */
+  .positioning-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .pos-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .pos-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+  .pos-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+  .pos-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px;}
+  .pos-actions{list-style:none;}
+  .pos-actions li{font-size:11px;color:var(--text2);padding:2px 0;display:flex;gap:6px;}
+  .pos-actions li::before{content:'✓';flex-shrink:0;}
+
+  /* TRUTH BOX */
+  .truth-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-top:24px;}
+  .truth-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .truth-items{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .truth-item{padding:12px 14px;border-radius:8px;font-size:12px;line-height:1.5;}
+  .truth-yes{background:rgba(22,196,127,0.06);border:1px solid rgba(22,196,127,0.15);color:#a7f3d0;}
+  .truth-no{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);color:#fca5a5;}
+  .truth-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;}
+
+  /* LINKEDIN HEADLINE */
+  .headline-box{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:16px 18px;margin-top:16px;}
+  .headline-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:8px;}
+  .headline-text{font-size:15px;font-weight:600;color:var(--text);font-family:var(--mono);}
+  .headline-note{font-size:11px;color:var(--text3);margin-top:8px;}
+
+  /* PROGRESS */
+  .progress-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;}
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .progress-row:last-child{margin-bottom:0;}
+  .prog-label{font-size:12px;color:var(--text2);min-width:180px;}
+  .prog-bar{flex:1;height:4px;background:var(--border2);border-radius:2px;}
+  .prog-fill{height:4px;border-radius:2px;}
+  .prog-pct{font-size:11px;font-weight:600;min-width:32px;text-align:right;}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--border);padding:24px 32px;display:flex;align-items:center;justify-content:space-between;max-width:900px;margin:0 auto;}
+  .footer-note{font-size:11px;color:var(--text3);}
+
+  @media(max-width:680px){
+    .hero-stats,.role-grid,.jb-grid,.fl-grid,.positioning-grid,.truth-items{grid-template-columns:1fr;}
+    nav .nav-links{display:none;}
+    .hero{padding:40px 16px 32px;}
+    section{padding:32px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><div class="nav-dot"></div>DeeW · Career Strategy</div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="scrollTo('income')">Income Map</button>
+    <button class="nav-link" onclick="scrollTo('phases')">Phases</button>
+    <button class="nav-link" onclick="scrollTo('actions')">Action Plan</button>
+    <button class="nav-link" onclick="scrollTo('boards')">Job Boards</button>
+    <button class="nav-link" onclick="scrollTo('freelance')">Freelance</button>
+    <button class="nav-link" onclick="scrollTo('positioning')">Positioning</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Data Analytics Career Roadmap 2025–2027</div>
+  <h1 class="hero-title">From Civil Engineer<br>to <span>$5,000+/mo</span> Remote Analyst</h1>
+  <p class="hero-sub">A strategic execution plan built on 5 crypto analytics portfolio projects, African market specialization, and a content-driven job search. Every number is grounded in real market data.</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-val v-green">Month 2</div><div class="hstat-lbl">First applications</div></div>
+    <div class="hstat"><div class="hstat-val v-blue">$3,000</div><div class="hstat-lbl">Month 12 target</div></div>
+    <div class="hstat"><div class="hstat-val v-amber">$5,000+</div><div class="hstat-lbl">Month 18–24 target</div></div>
+    <div class="hstat"><div class="hstat-val v-purple">5</div><div class="hstat-lbl">Portfolio projects</div></div>
+  </div>
+</div>
+
+<!-- INCOME TIMELINE -->
+<section id="income">
+  <div class="section-title">Income trajectory</div>
+
+  <div class="income-timeline">
+    <div class="it-track"><div class="it-fill"></div></div>
+    <div class="it-nodes">
+      <div class="it-node">
+        <div class="it-dot" style="background:#4e5770;"></div>
+        <div class="it-node-label">Today</div>
+        <div class="it-node-pay" style="color:#8b93aa;">~$800/mo</div>
+        <div class="it-node-time">Tata Chemicals</div>
+      </div>
+      <div class="it-node">
+        <div class="it-dot" style="background:var(--green2);"></div>
+        <div class="it-node-label">Month 2–3</div>
+        <div class="it-node-pay" style="color:var(--green);">$800 + $200</div>
+        <div class="it-node-time">Tata + freelance starts</div>
+      </div>
+      <div class="it-node">
+        <div class="it-dot" style="background:var(--green);"></div>
+        <div class="it-node-label">Month 6</div>
+        <div class="it-node-pay" style="color:var(--green);">$1,500–$2,000</div>
+        <div class="it-node-time">First remote offer</div>
+      </div>
+      <div class="it-node">
+        <div class="it-dot" style="background:var(--blue);"></div>
+        <div class="it-node-label">Month 12</div>
+        <div class="it-node-pay" style="color:var(--blue);">$3,000–$3,500</div>
+        <div class="it-node-time">Role + freelance stack</div>
+      </div>
+      <div class="it-node">
+        <div class="it-dot" style="background:var(--amber);"></div>
+        <div class="it-node-label">Month 18</div>
+        <div class="it-node-pay" style="color:var(--amber);">$4,000–$5,500</div>
+        <div class="it-node-time">Mid-level + consulting</div>
+      </div>
+      <div class="it-node">
+        <div class="it-dot" style="background:var(--purple);"></div>
+        <div class="it-node-label">Month 24</div>
+        <div class="it-node-pay" style="color:var(--purple);">$5,000–$8,000</div>
+        <div class="it-node-time">Analytics Engineer tier</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:14px;">Skill readiness — current vs what each phase requires</div>
+    <div class="progress-row">
+      <div class="prog-label">Python (pandas, APIs)</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:35%;background:var(--green);"></div></div>
+      <div class="prog-pct" style="color:var(--green);">35%</div>
+    </div>
+    <div class="progress-row">
+      <div class="prog-label">SQL</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:25%;background:var(--blue);"></div></div>
+      <div class="prog-pct" style="color:var(--blue);">25%</div>
+    </div>
+    <div class="progress-row">
+      <div class="prog-label">Data visualization (Power BI)</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:20%;background:var(--amber);"></div></div>
+      <div class="prog-pct" style="color:var(--amber);">20%</div>
+    </div>
+    <div class="progress-row">
+      <div class="prog-label">Crypto domain knowledge</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:85%;background:var(--purple);"></div></div>
+      <div class="prog-pct" style="color:var(--purple);">85%</div>
+    </div>
+    <div class="progress-row">
+      <div class="prog-label">Africa market expertise</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:90%;background:var(--teal);"></div></div>
+      <div class="prog-pct" style="color:var(--teal);">90%</div>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:12px;">Your crypto domain + Africa market expertise is already at senior level. The gap is purely technical. Projects fix technical gaps. Your moat is built.</div>
+  </div>
+</section>
+
+<!-- PHASES -->
+<section id="phases">
+  <div class="section-title">Target roles by phase</div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-section">
+    <div class="phase-header-row">
+      <div class="phase-title-row">
+        <div class="phase-num" style="background:rgba(22,196,127,0.12);color:var(--green);">1</div>
+        <div>
+          <div class="phase-name">Entry level — Now to Month 6</div>
+          <div class="phase-sub">Apply from Month 2. Project 1 is your ticket in.</div>
+        </div>
+      </div>
+      <div class="phase-pay" style="background:rgba(22,196,127,0.1);color:var(--green);">$800–$1,800/mo</div>
+    </div>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-title">Junior Data Analyst</div>
+        <div class="role-company">Yellow Card · Remote Africa · yellowcard.io/careers</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--green);">$800–$1,200/mo</span>
+          <span class="role-avail avail-hot">Hiring regularly</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Operations Data Analyst</div>
+        <div class="role-company">Chipper Cash · Remote · chippercash.com/careers</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--green);">$900–$1,500/mo</span>
+          <span class="role-avail avail-hot">Risk & ops focus</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Business Analyst</div>
+        <div class="role-company">M-KOPA · Remote Kenya · m-kopa.com/careers</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--green);">$1,000–$1,400/mo</span>
+          <span class="role-avail avail-mid">Fintech / Africa</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Data Analyst — P2P</div>
+        <div class="role-company">Binance Africa · Remote · binance.com/en/careers</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--green);">$1,200–$1,800/mo</span>
+          <span class="role-avail avail-comp">Competitive apply</span>
+        </div>
+      </div>
+    </div>
+    <div class="skills-wrap">
+      <span class="sk sk-req">Project 1 published</span>
+      <span class="sk sk-req">GitHub portfolio</span>
+      <span class="sk sk-req">SQL basics</span>
+      <span class="sk sk-req">pandas</span>
+      <span class="sk sk-req">Power BI dashboard</span>
+      <span class="sk">LinkedIn active (weekly posts)</span>
+      <span class="sk">data_dictionary.md</span>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-section">
+    <div class="phase-header-row">
+      <div class="phase-title-row">
+        <div class="phase-num" style="background:rgba(59,130,246,0.12);color:var(--blue);">2</div>
+        <div>
+          <div class="phase-name">Mid-level — Month 6–12</div>
+          <div class="phase-sub">Apply from Month 4. 3+ projects live. Weekly content running.</div>
+        </div>
+      </div>
+      <div class="phase-pay" style="background:rgba(59,130,246,0.1);color:var(--blue);">$2,000–$4,000/mo</div>
+    </div>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-title">Growth Analyst</div>
+        <div class="role-company">OKX · Remote global · okx.com/careers</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--blue);">$2,500–$3,500/mo</span>
+          <span class="role-avail avail-hot">Africa expansion active</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Product Data Analyst</div>
+        <div class="role-company">VALR · Fully remote global · careers.valr.com</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--blue);">$2,000–$3,200/mo</span>
+          <span class="role-avail avail-hot">Learning fund included</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Risk Data Analyst</div>
+        <div class="role-company">Chipper Cash · Remote · Senior tier</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--blue);">$2,500–$4,000/mo</span>
+          <span class="role-avail avail-mid">Project 5 unlocks this</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">P2P Marketplace Analyst</div>
+        <div class="role-company">Bybit · Remote · bybit.com/en/careers</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--blue);">$2,800–$4,000/mo</span>
+          <span class="role-avail avail-mid">Projects 2 & 3 required</span>
+        </div>
+      </div>
+    </div>
+    <div class="skills-wrap">
+      <span class="sk sk-req">3–5 projects published</span>
+      <span class="sk sk-req">SQL advanced (window functions)</span>
+      <span class="sk sk-req">cohort analysis</span>
+      <span class="sk sk-req">A/B test design</span>
+      <span class="sk sk-req">KPI engineering</span>
+      <span class="sk">dbt Core basics</span>
+      <span class="sk">anomaly detection</span>
+      <span class="sk">500+ LinkedIn followers</span>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-section">
+    <div class="phase-header-row">
+      <div class="phase-title-row">
+        <div class="phase-num" style="background:rgba(245,158,11,0.12);color:var(--amber);">3</div>
+        <div>
+          <div class="phase-name">Senior / Analytics Engineer — Month 12–24</div>
+          <div class="phase-sub">The $5,000+ tier. Your specialization is now a genuine market moat.</div>
+        </div>
+      </div>
+      <div class="phase-pay" style="background:rgba(245,158,11,0.1);color:var(--amber);">$4,000–$8,000/mo</div>
+    </div>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-title">Analytics Engineer</div>
+        <div class="role-company">Kraken · Remote 70+ countries · kraken.com/careers</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--amber);">$5,000–$8,000/mo</span>
+          <span class="role-avail avail-comp">dbt + BigQuery required</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Senior Data Analyst</div>
+        <div class="role-company">Chainalysis · Remote global · chainalysis.com/careers</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--amber);">$4,500–$7,000/mo</span>
+          <span class="role-avail avail-comp">Blockchain intelligence</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Marketplace Intelligence Lead</div>
+        <div class="role-company">Binance · Remote · Senior level</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--amber);">$4,500–$7,000/mo</span>
+          <span class="role-avail avail-comp">All 5 projects signal this</span>
+        </div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Freelance Analytics Consultant</div>
+        <div class="role-company">Toptal / Contra / Direct · crypto & fintech</div>
+        <div class="role-pay-row">
+          <span class="role-salary" style="color:var(--amber);">$50–$100/hr</span>
+          <span class="role-avail avail-hot">$3K–$8K per project</span>
+        </div>
+      </div>
+    </div>
+    <div class="skills-wrap">
+      <span class="sk sk-req">dbt Core</span>
+      <span class="sk sk-req">BigQuery or Snowflake</span>
+      <span class="sk sk-req">Git + data modeling</span>
+      <span class="sk sk-req">ML basics (sklearn)</span>
+      <span class="sk sk-req">risk scoring systems</span>
+      <span class="sk sk-req">5 projects published</span>
+      <span class="sk">public case studies with real metrics</span>
+      <span class="sk">1,000+ LinkedIn followers</span>
+    </div>
+  </div>
+</section>
+
+<!-- ACTION PLAN -->
+<section id="actions">
+  <div class="section-title">Month-by-month execution plan</div>
+
+  <div class="action-list">
+
+    <div class="action-item">
+      <div class="action-month">
+        <div class="action-status status-now">Do this now</div>
+        <div class="action-month-label">Today — Week 1</div>
+        <div class="action-month-pay" style="color:var(--text3);">$800/mo (Tata)</div>
+      </div>
+      <div class="action-body">
+        <ul class="action-tasks">
+          <li><strong>Update LinkedIn headline today</strong> — "Data Analyst · African Crypto Exchange Analytics · SQL · Python | Building in public"</li>
+          <li><strong>Create GitHub profile</strong> at github.com/DWaithera — make it public and add a bio</li>
+          <li><strong>Bookmark 3 job boards:</strong> cryptojobslist.com, remoterocketship.com, web3.career — check every Monday</li>
+          <li><strong>Create Upwork account</strong> — write bio around 9 years Binance P2P merchant experience. Set rate: $20/hr to start</li>
+          <li><strong>Start Project 1 Day 1</strong> — GitHub repo setup (already have the guide)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-month">
+        <div class="action-status status-now">Month 1</div>
+        <div class="action-month-label">June 2025</div>
+        <div class="action-month-pay" style="color:var(--text3);">$800 + first gig?</div>
+      </div>
+      <div class="action-body">
+        <ul class="action-tasks">
+          <li><strong>Complete Project 1</strong> — all 4 weeks, all 16 days, GitHub live, dashboard live</li>
+          <li><strong>Publish weekly on LinkedIn</strong> — minimum 4 posts this month (one per week of project)</li>
+          <li><strong>TikTok + X</strong> — one post per day worked on the project. Short, honest, specific</li>
+          <li><strong>Apply for 1 Upwork gig</strong> — search "crypto market research" or "Africa fintech analysis". Send 3 proposals</li>
+          <li><strong>Do NOT apply for full-time jobs yet</strong> — your portfolio needs 1 published project minimum</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-month">
+        <div class="action-status status-now">Month 2–3</div>
+        <div class="action-month-label">July–Aug 2025</div>
+        <div class="action-month-pay" style="color:var(--green);">$800 + $200–$400</div>
+      </div>
+      <div class="action-body">
+        <ul class="action-tasks">
+          <li><strong>Start and complete Projects 2 and 3</strong> — P2P Marketplace + Merchant Trust</li>
+          <li><strong>Apply to Yellow Card and M-KOPA</strong> — 2 projects published = credible application. Use Project 1 case study post as cover letter supplement</li>
+          <li><strong>Upwork: close first 2 gigs</strong> — even small ($50–$150) ones. Reviews matter more than money at this stage</li>
+          <li><strong>DM 3 people per week on LinkedIn</strong> — analytics managers at Yellow Card, Chipper Cash, VALR. Not begging for jobs — commenting on their posts, asking smart questions about their market</li>
+          <li><strong>SQL practice daily</strong> — 30 minutes on Mode Analytics or Leetcode SQL track</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-month">
+        <div class="action-status status-soon">Month 4–5</div>
+        <div class="action-month-label">Sep–Oct 2025</div>
+        <div class="action-month-pay" style="color:var(--green);">$800 + $400–$700</div>
+      </div>
+      <div class="action-body">
+        <ul class="action-tasks">
+          <li><strong>Complete Projects 4 and 5</strong> — User Retention + Fraud Intelligence</li>
+          <li><strong>Expand job applications</strong> — Chipper Cash, VALR, Binance Africa, OKX remote Africa postings. Apply to 5 roles per week</li>
+          <li><strong>Upwork rate increase</strong> — raise to $30/hr after 3 positive reviews</li>
+          <li><strong>Publish master case study</strong> — "5 months, 5 projects, 1 specialization" — this is your biggest content moment</li>
+          <li><strong>Identify 20 target hiring managers</strong> — LinkedIn: Head of Data, P2P Lead, Growth Analytics Manager at target companies</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-month">
+        <div class="action-status status-soon">Month 6</div>
+        <div class="action-month-label">Nov 2025</div>
+        <div class="action-month-pay" style="color:var(--blue);">$1,500–$2,500</div>
+      </div>
+      <div class="action-body">
+        <ul class="action-tasks">
+          <li><strong>First remote offer target</strong> — if not received yet, diagnose: is it the application, the portfolio, or the outreach? Fix the weakest link</li>
+          <li><strong>If no offer:</strong> freelance harder. Target $500–$800/mo from Upwork + direct gigs while continuing to apply</li>
+          <li><strong>Negotiate well</strong> — you have a full-time job. You are not desperate. Use the salary negotiation framework from your POWERCHINA experience</li>
+          <li><strong>Start learning dbt Core</strong> — free at courses.getdbt.com. This unlocks the Analytics Engineer tier</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-month">
+        <div class="action-status status-soon">Month 7–12</div>
+        <div class="action-month-label">Dec 2025–May 2026</div>
+        <div class="action-month-pay" style="color:var(--blue);">$2,500–$4,000</div>
+      </div>
+      <div class="action-body">
+        <ul class="action-tasks">
+          <li><strong>In your remote role</strong> — over-deliver in month 1. Get named in a team win. Build internal reputation fast</li>
+          <li><strong>Stack freelance alongside</strong> — 1–2 gigs per month. Upwork rate now $40–$60/hr as specialist</li>
+          <li><strong>Add BigQuery + dbt to GitHub</strong> — one project showing data pipeline engineering. This is the Analytics Engineer prerequisite</li>
+          <li><strong>Keep publishing content</strong> — monthly case study post minimum. Your LinkedIn audience compounds</li>
+          <li><strong>Combined income target:</strong> $3,000+/mo by Month 12</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-month">
+        <div class="action-status status-later">Month 12–18</div>
+        <div class="action-month-label">Jun–Nov 2026</div>
+        <div class="action-month-pay" style="color:var(--amber);">$4,000–$5,500</div>
+      </div>
+      <div class="action-body">
+        <ul class="action-tasks">
+          <li><strong>Apply for Analytics Engineer roles</strong> — Kraken, Coinbase, Chainalysis. These pay $5K–$8K/mo remote</li>
+          <li><strong>Freelance rate: $60–$80/hr</strong> — you now have 12+ months of crypto analytics experience and 5 published projects</li>
+          <li><strong>Consider Toptal application</strong> — vetted marketplace, premium clients, $80–$150/hr rates</li>
+          <li><strong>Start writing about analytics engineering</strong> — dbt + BigQuery content. This positions you for the next tier</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-month">
+        <div class="action-status status-future">Month 18–24</div>
+        <div class="action-month-label">Dec 2026–Jun 2027</div>
+        <div class="action-month-pay" style="color:var(--purple);">$5,000–$8,000+</div>
+      </div>
+      <div class="action-body">
+        <ul class="action-tasks">
+          <li><strong>Senior Analytics Engineer or Staff Analyst</strong> at a top exchange — this is the $6K–$8K/mo tier</li>
+          <li><strong>Direct consulting:</strong> exchanges building Africa operations will pay $5K–$10K for a 4-week engagement from someone with your exact specialization</li>
+          <li><strong>Consider building a product:</strong> Africa crypto analytics newsletter, data product, or API — your audience and specialization give you a real distribution advantage</li>
+          <li><strong>You are in the top 1% of Africa crypto analysts globally</strong> at this point. Very few people have this combination of depth</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- JOB BOARDS -->
+<section id="boards">
+  <div class="section-title">3 best job boards — bookmark all three today</div>
+
+  <div class="jb-grid">
+    <div class="jb-card">
+      <div class="jb-rank" style="color:var(--green);">Best for crypto roles</div>
+      <div class="jb-name">cryptojobslist.com</div>
+      <div class="jb-desc">The primary crypto job board. Binance, OKX, Kraken, Coinbase, Yellow Card all post here. New roles daily. Salary filters available. Set a saved search and get email alerts.</div>
+      <div class="jb-search">Search: "data analyst" + remote + $2K–$5K</div>
+      <div class="jb-tags">
+        <span class="jb-tag">Binance</span>
+        <span class="jb-tag">OKX</span>
+        <span class="jb-tag">Kraken</span>
+        <span class="jb-tag">Yellow Card</span>
+        <span class="jb-tag">Daily new roles</span>
+      </div>
+    </div>
+    <div class="jb-card">
+      <div class="jb-rank" style="color:var(--blue);">Best for Africa remote</div>
+      <div class="jb-name">remoterocketship.com</div>
+      <div class="jb-desc">Africa-filtered remote roles that most boards miss. Aggregates from company career pages directly. Check weekly. Use country filter: Africa or Kenya. Includes fintech and crypto companies.</div>
+      <div class="jb-search">Filter: Data Analyst + Africa + remote</div>
+      <div class="jb-tags">
+        <span class="jb-tag">Chipper Cash</span>
+        <span class="jb-tag">M-KOPA</span>
+        <span class="jb-tag">Africa-first roles</span>
+        <span class="jb-tag">Weekly check</span>
+      </div>
+    </div>
+    <div class="jb-card">
+      <div class="jb-rank" style="color:var(--amber);">Best for Web3 roles</div>
+      <div class="jb-name">web3.career</div>
+      <div class="jb-desc">Web3-native job board. Filter: Data + Analytics. 500+ Web3 companies. Includes VALR, Binance, Bybit, Chainalysis. Has salary data and remote filter. Less competition than LinkedIn.</div>
+      <div class="jb-search">Filter: Analytics + Remote + Africa</div>
+      <div class="jb-tags">
+        <span class="jb-tag">VALR</span>
+        <span class="jb-tag">Chainalysis</span>
+        <span class="jb-tag">Bybit</span>
+        <span class="jb-tag">Less saturated</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text2);line-height:1.6;">
+    <strong style="color:var(--text);">Also check directly:</strong> careers.valr.com · chippercash.com/careers · yellowcard.io/careers · binance.com/en/careers · okx.com/careers · bybit.com/en/careers · kraken.com/careers · chainalysis.com/careers
+  </div>
+</section>
+
+<!-- FREELANCE -->
+<section id="freelance">
+  <div class="section-title">Freelance strategy — income between now and your first remote role</div>
+
+  <div class="fl-grid">
+    <div class="fl-card">
+      <div class="fl-platform">Upwork — Start Month 1</div>
+      <div class="fl-gig">Crypto market research report (Africa focus)</div>
+      <div class="fl-rate">$25–$35/hr</div>
+      <div class="fl-when">Open profile now. First 3 gigs build reviews.</div>
+    </div>
+    <div class="fl-card">
+      <div class="fl-platform">Upwork — Month 2+</div>
+      <div class="fl-gig">Africa fintech dashboard (Power BI)</div>
+      <div class="fl-rate">$300–$600 fixed</div>
+      <div class="fl-when">After Project 1 — show real dashboard as portfolio piece</div>
+    </div>
+    <div class="fl-card">
+      <div class="fl-platform">Direct LinkedIn outreach</div>
+      <div class="fl-gig">P2P trader performance analysis</div>
+      <div class="fl-rate">$200–$500 fixed</div>
+      <div class="fl-when">DM crypto traders and small exchanges in your network</div>
+    </div>
+    <div class="fl-card">
+      <div class="fl-platform">Contra — Month 3+</div>
+      <div class="fl-gig">Crypto market intelligence report (monthly retainer)</div>
+      <div class="fl-rate">$500–$1,000/mo</div>
+      <div class="fl-when">Retainer client = stable side income. Target fintech startups</div>
+    </div>
+    <div class="fl-card">
+      <div class="fl-platform">Toptal — Month 12+</div>
+      <div class="fl-gig">Senior analytics consultant (vetted platform)</div>
+      <div class="fl-rate">$60–$100/hr</div>
+      <div class="fl-when">Apply after 12 months experience. Top 3% vetting process.</div>
+    </div>
+    <div class="fl-card">
+      <div class="fl-platform">Direct consulting — Month 18+</div>
+      <div class="fl-gig">Africa expansion intelligence (4-week engagement)</div>
+      <div class="fl-rate">$3,000–$8,000 per project</div>
+      <div class="fl-when">Your specialization commands this rate at senior level</div>
+    </div>
+  </div>
+
+  <div class="fl-note">
+    <strong style="color:var(--text);">Upwork reality check:</strong> The median data analyst rate on Upwork is $30/hr. Your Africa crypto specialization puts you above the median immediately — but you need reviews first. Price at $20/hr for the first 3 gigs, close them well, collect 5-star reviews, then raise to $35 → $50 → $80 as reputation builds. Do not skip the low-rate phase — reviews are the currency that unlocks higher rates. One strong review from a crypto company is worth 10 generic ones.
+  </div>
+</section>
+
+<!-- POSITIONING -->
+<section id="positioning">
+  <div class="section-title">How to position yourself — your unique angle</div>
+
+  <div class="positioning-grid">
+    <div class="pos-card">
+      <div class="pos-type" style="color:var(--green);">Your actual moat</div>
+      <div class="pos-title">9 years Binance P2P Merchant + data analytics</div>
+      <div class="pos-desc">No one applying for P2P analytics roles at Binance has 9 years of verified merchant experience on Binance. You have operated the exact systems you are now analyzing. That is not a credential — that is domain authority.</div>
+      <ul class="pos-actions">
+        <li>Put "9 years Binance P2P Verified Merchant" in LinkedIn About section</li>
+        <li>Mention it in every cover letter for P2P roles</li>
+        <li>Build Project 2 (P2P Marketplace) as if you are analyzing your own data</li>
+        <li>Post content about what you observe as a merchant vs what the data shows</li>
+      </ul>
+    </div>
+    <div class="pos-card">
+      <div class="pos-type" style="color:var(--blue);">The positioning that wins</div>
+      <div class="pos-title">Not a generalist. A specialist in one niche.</div>
+      <div class="pos-desc">Generic data analysts compete on price. Specialists compete on value. You are building the only 5-project portfolio in the world focused on African crypto exchange analytics. That makes comparison shopping impossible for a hiring manager who needs that exact expertise.</div>
+      <ul class="pos-actions">
+        <li>Every post, every project, every application — Africa crypto analytics</li>
+        <li>Never apply for general BI analyst roles — stay in your lane</li>
+        <li>Your LinkedIn tagline is your positioning: say the niche every time</li>
+        <li>Reject irrelevant opportunities — diluting your niche dilutes your brand</li>
+      </ul>
+    </div>
+    <div class="pos-card">
+      <div class="pos-type" style="color:var(--amber);">LinkedIn — your primary job search tool</div>
+      <div class="pos-title">Content is your inbound engine</div>
+      <div class="pos-desc">Every analyst who posts weekly on LinkedIn about their niche gets inbound messages. Every analyst who doesn't waits 18+ months for the same result. Content is not optional — it is your job search strategy.</div>
+      <ul class="pos-actions">
+        <li>Post every single day you work on a project</li>
+        <li>Share findings with specific numbers — not "interesting results" but "Nigeria DSS = 74"</li>
+        <li>Tag: #DataAnalytics #CryptoAfrica #P2P #BuildingInPublic #Africa</li>
+        <li>Comment on posts by Head of Data at Binance, Yellow Card, VALR weekly</li>
+      </ul>
+    </div>
+    <div class="pos-card">
+      <div class="pos-type" style="color:var(--purple);">The headline that gets you found</div>
+      <div class="pos-title">Update this today — not tomorrow</div>
+      <div class="pos-desc">LinkedIn's algorithm surfaces you in recruiter searches based on your headline. A generic headline like "Civil Engineer" makes you invisible to crypto hiring managers. Change it today.</div>
+      <div class="headline-box">
+        <div class="headline-label">Your new LinkedIn headline</div>
+        <div class="headline-text">Data Analyst · African Crypto Exchange Analytics · SQL · Python | Building in public</div>
+        <div class="headline-note">Change this before you do anything else. Recruiter search terms: "data analyst" + "Africa" + "crypto" — your headline must contain all three.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUTH BOX -->
+  <div class="truth-box">
+    <div class="truth-title">Reality check — what accelerates this and what kills it</div>
+    <div class="truth-items">
+      <div class="truth-item truth-yes">
+        <div class="truth-label">What gets you to $3K/mo by Month 12</div>
+        Ship all 5 projects on schedule. Post weekly without missing. Apply from Month 2. Freelance 2–3 small gigs per month. DM 3 people per week. Negotiate your first offer — do not accept first number.
+      </div>
+      <div class="truth-item truth-no">
+        <div class="truth-label">What delays you to Month 18+</div>
+        Skipping post days. Waiting to apply until "portfolio is perfect". Taking generic BI jobs that dilute your niche. Not freelancing during the gap. Accepting the first salary offered without negotiating.
+      </div>
+      <div class="truth-item truth-yes">
+        <div class="truth-label">Your biggest differentiator vs other applicants</div>
+        You have 9 years of operational P2P experience on Binance. You understand M-Pesa corridors, KES–USDT spreads, merchant behavior from the inside. No data analytics bootcamp produces this. It cannot be taught. It is yours alone.
+      </div>
+      <div class="truth-item truth-no">
+        <div class="truth-label">The one thing that will cost you the most</div>
+        Inconsistency. Missing a week of the project. Stopping posts after 2 weeks. This career transition compounds exactly like interest — the gains are slow at first and then sudden. The analysts who stop at Month 3 never see the Month 6 inflection.
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <div class="footer-note">DeeW · Data Analytics Career Strategy · Built June 2025 · All salary data from CryptoJobsList, Upwork, and live job postings</div>
+  <div class="footer-note">Start date: Monday. First deliverable: GitHub repo live.</div>
+</footer>
+
+<script>
+function scrollTo(id){
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+const sections = ['income','phases','actions','boards','freelance','positioning'];
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      document.querySelectorAll('.nav-link').forEach((b,i)=>{
+        b.classList.toggle('active', sections[i]===id);
+      });
+    }
+  });
+},{threshold:0.3});
+sections.forEach(id=>{const el=document.getElementById(id);if(el)observer.observe(el);});
+</script>
+</body>
+</html>
