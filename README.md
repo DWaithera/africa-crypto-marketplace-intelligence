@@ -1,54 +1,178 @@
-"# Africa Crypto Market Intelligence System"
+\# Africa Crypto Market Intelligence System
 
 
 
-\## Project Overview
+\## Problem Statement
 
-A data analytics system that scores and ranks African markets
 
-(Kenya, Nigeria, Ghana, South Africa) for cryptocurrency exchange
 
-expansion using demand signals, payment infrastructure data,
+Crypto exchanges expanding in Africa face fragmented and unreliable signals of demand, infrastructure readiness, and adoption. 
 
-and marketplace activity proxies.
+\## Business Objective
+
+
+
+To build a data-driven framework that evaluates and ranks African countries based on their readiness and attractiveness for crypto exchange expansion using measurable economic, behavioral, and infrastructure signals.
 
 
 
 \## Business Question
 
-Where and when should a crypto exchange expand next in Africa?
+
+
+Which African markets should a crypto exchange prioritize for expansion based on measurable demand, infrastructure readiness, and adoption signals?
 
 
 
-\## Final Output
+\## Output
 
-Expansion Opportunity Score (EOS) — a composite metric ranking
 
-4 countries for exchange market entry.
+
+Market Expansion Priority Score (MEPS): a composite ranking system used to compare African countries for crypto market entry.
+
+
+
+\## Target Markets
+
+
+
+\* Kenya
+
+\* Nigeria
+
+\* Ghana
+
+\* South Africa
+
+
+
+\## Key Evaluation Dimensions
+
+
+
+The MEPS model evaluates each country using four core dimensions:
+
+
+
+\* \*\*Demand Signal\*\* → Crypto-related search interest and trading activity proxies
+
+\* \*\*Infrastructure Readiness\*\* → Payment systems, mobile money penetration, banking accessibility
+
+\* \*\*Adoption Environment\*\* → Financial inclusion and digital literacy indicators
+
+\* \*\*Market Activity\*\* → Crypto market engagement and liquidity proxies
+
+
+
+\## Methodology
+
+
+
+1\. Collect country-level macroeconomic and crypto-related datasets
+
+2\. Standardize and normalize all indicators for comparability
+
+3\. Assign weights to each evaluation dimension based on market relevance
+
+4\. Compute composite MEPS for each country
+
+5\. Rank countries from highest to lowest expansion priority
+
+6\. Visualize and interpret results for business decision-making
+
+
+
+\## Scoring Model (MEPS)
+
+
+
+MEPS is calculated as a weighted composite score:
+
+
+
+MEPS =
+
+(w1 × Demand Score) +
+
+(w2 × Infrastructure Score) +
+
+(w3 × Adoption Score) +
+
+(w4 × Market Activity Score)
+
+
+
+Where weights (w1–w4) are defined based on strategic importance of each dimension.
 
 
 
 \## Data Sources
 
-\- CoinGecko API (BTC/ETH price and volume)
 
-\- Google Trends via pytrends (crypto search demand)
 
-\- Central Bank of Kenya (M-Pesa transaction data)
+\* Google Trends (crypto search demand signals)
 
-\- World Bank financial inclusion data
+\* CoinGecko API (market activity and liquidity proxies)
+
+\* World Bank datasets (financial inclusion indicators)
+
+\* National financial and mobile money reports (Kenya, Nigeria, Ghana, South Africa)
+
+\* ICT and internet penetration datasets
 
 
 
 \## Tech Stack
 
-Python · pandas · matplotlib · seaborn · statsmodels · Power BI
+
+
+Python · pandas · numpy · matplotlib · seaborn · statsmodels · Power BI
+
+
+
+\## Project Structure
+
+
+
+\* data/ → raw and processed datasets
+
+\* notebooks/ → data cleaning, analysis, and scoring model
+
+\* visuals/ → charts, comparisons, and insights
+
+\* reports/ → findings and business interpretation
+
+\* dashboard/ → Power BI dashboards
+
+\* docs/ → methodology and references
+
+
+
+\## Assumptions \& Limitations
+
+
+
+\* Some data proxies are used where direct crypto adoption data is unavailable
+
+\* Weighting in MEPS is initially heuristic and may be refined with regression or PCA
+
+\* Informal crypto activity in African markets may not be fully captured
+
+\* Data availability varies across countries
 
 
 
 \## Author
 
-Damaris Waithera | Data Analyst | Nairobi, Kenya
+
+
+Damaris Waithera
+
+Data Analyst | Nairobi, Kenya
 
 GitHub: https://github.com/DWaithera
+
+LinkedIn: https://www.linkedin.com/in/damariswaithera/
+
+
 
