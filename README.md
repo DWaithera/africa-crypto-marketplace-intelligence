@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 \# Africa Crypto Market Intelligence System
 
 
 
 \## Problem Statement
+=======
+Africa Crypto Market Intelligence System
+
+
+
+Project Overview
+>>>>>>> 38ad5693e6f24cf3996011c4f9df054da1c0b201
 
 
 
@@ -16,7 +24,7 @@ To build a data-driven framework that evaluates and ranks African countries base
 
 
 
-\## Business Question
+Business Question
 
 
 
@@ -24,7 +32,11 @@ Which African markets should a crypto exchange prioritize for expansion based on
 
 
 
+<<<<<<< HEAD
 \## Output
+=======
+Final Output
+>>>>>>> 38ad5693e6f24cf3996011c4f9df054da1c0b201
 
 
 
@@ -106,7 +118,7 @@ Where weights (w1–w4) are defined based on strategic importance of each dimens
 
 
 
-\## Data Sources
+Data Sources
 
 
 
@@ -122,7 +134,7 @@ Where weights (w1–w4) are defined based on strategic importance of each dimens
 
 
 
-\## Tech Stack
+Tech Stack
 
 
 
@@ -162,7 +174,7 @@ Python · pandas · numpy · matplotlib · seaborn · statsmodels · Power BI
 
 
 
-\## Author
+\Author
 
 
 
