@@ -1,8 +1,8 @@
-"# Africa Crypto Market Intelligence System"
+Africa Crypto Market Intelligence System
 
 
 
-\## Project Overview
+Project Overview
 
 A data analytics system that scores and ranks African markets
 
@@ -14,13 +14,13 @@ and marketplace activity proxies.
 
 
 
-\## Business Question
+Business Question
 
 Where and when should a crypto exchange expand next in Africa?
 
 
 
-\## Final Output
+Final Output
 
 Expansion Opportunity Score (EOS) — a composite metric ranking
 
@@ -28,7 +28,7 @@ Expansion Opportunity Score (EOS) — a composite metric ranking
 
 
 
-\## Data Sources
+Data Sources
 
 \- CoinGecko API (BTC/ETH price and volume)
 
@@ -40,13 +40,13 @@ Expansion Opportunity Score (EOS) — a composite metric ranking
 
 
 
-\## Tech Stack
+Tech Stack
 
 Python · pandas · matplotlib · seaborn · statsmodels · Power BI
 
 
 
-\## Author
+\Author
 
 Damaris Waithera | Data Analyst | Nairobi, Kenya
 
