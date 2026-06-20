@@ -65,30 +65,30 @@ Tech Stack
 
 Project Structure
 Africa-Crypto-Market-Intelligence/
-│
-├── data/
-│   ├── raw/               # API pulls & external datasets
-│   ├── processed/         # cleaned datasets
-│
-├── notebooks/
-│   ├── 01_data_ingestion.ipynb
-│   ├── 02_feature_engineering.ipynb
-│   ├── 03_meps_model.ipynb
-│
-├── visuals/
-│   ├── rankings.png
-│   ├── correlation_heatmap.png
-│
-├── reports/
-│   ├── final_insights.pdf
-│
-├── src/
-│   ├── data_pipeline.py
-│   ├── feature_engineering.py
-│   ├── meps_model.py
-│
-├── README.md
-└── requirements.txt
+        │
+        ├── data/
+        │   ├── raw/               # API pulls & external datasets
+        │   ├── processed/         # cleaned datasets
+        │
+        ├── notebooks/
+        │   ├── 01_data_ingestion.ipynb
+        │   ├── 02_feature_engineering.ipynb
+        │   ├── 03_meps_model.ipynb
+        │
+        ├── visuals/
+        │   ├── rankings.png
+        │   ├── correlation_heatmap.png
+        │
+        ├── reports/
+        │   ├── final_insights.pdf
+        │
+        ├── src/
+        │   ├── data_pipeline.py
+        │   ├── feature_engineering.py
+        │   ├── meps_model.py
+        │
+        ├── README.md
+        └── requirements.txt
 
 
 MEPS Model
@@ -165,7 +165,7 @@ Future Improvements
     Expand to 20+ African markets
 
 
-👤 Author
+Author
     Damaris Waithera
     Data Analyst | Nairobi, Kenya
     GitHub: https://github.com/DWaithera
