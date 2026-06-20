@@ -1,7 +1,7 @@
-🌍 Africa Crypto Market Intelligence System (MEPS)**
+Africa Crypto Market Intelligence System (MEPS)**
 
 
-📊 Overview
+Overview
 A data-driven analytics system that evaluates and ranks African countries based on their attractiveness for crypto exchange expansion.
 It combines macroeconomic indicators, digital infrastructure metrics, and crypto market signals into a single composite index:
 
@@ -10,7 +10,7 @@ Market Expansion Priority Score (MEPS)
 This score helps crypto exchanges and fintech companies identify where to expand, where demand exists.
 
 
-🎯 Business Problem
+Business Problem
 Crypto exchanges entering African markets lack a unified framework to assess:
     Where real crypto demand exists
     Which countries have usable financial infrastructure
@@ -22,7 +22,7 @@ Key Question
 Which African markets should a crypto exchange prioritize for expansion based on measurable demand, infrastructure readiness, and adoption signals?
 
 
-🧠 Solution
+Solution
 This project builds a multi-factor scoring system (MEPS) that ranks countries using structured data across 6 dimensions:
     Demand	Google Trends interest in crypto assets
 
@@ -36,19 +36,12 @@ This project builds a multi-factor scoring system (MEPS) that ranks countries us
 
     Digital Readiness	Smartphone + internet penetration
 
-⚙️ System Architecture
+System Architecture
 
      Global Crypto Markets
              (CoinGecko API: BTC, ETH, USDT)
                           ↓
-                  Market Sentiment Layer
-                          ↓
-                          
-------------------------------------------------
-| Country-Level Economic & Digital Indicators  |
-| Google Trends | GDP | Mobile Money | Internet |
-------------------------------------------------
-                          
+                  Market Sentiment Layer                          
                           ↓
                     Feature Engineering
                           ↓
@@ -59,7 +52,7 @@ This project builds a multi-factor scoring system (MEPS) that ranks countries us
                  MEPS Country Ranking Output
 
                 
-🛠️ Tech Stack
+Tech Stack
     Python (Core engine)
     Pandas (Data manipulation)
     NumPy (Numerical processing)
@@ -70,7 +63,7 @@ This project builds a multi-factor scoring system (MEPS) that ranks countries us
     Jupyter Notebook (analysis workflow)
 
 
-📂 Project Structure
+Project Structure
 Africa-Crypto-Market-Intelligence/
 │
 ├── data/
@@ -98,7 +91,7 @@ Africa-Crypto-Market-Intelligence/
 └── requirements.txt
 
 
-🧮 MEPS Model
+MEPS Model
 
 The Market Expansion Priority Score is calculated as:
 MEPS =
@@ -120,7 +113,7 @@ Default Weights
     Digital Readiness	10%
 
 
-📈 Output Example
+Output Example
 
 Country Rankings (MEPS Score)
     1. Nigeria 🇳🇬 → 0.92
@@ -129,21 +122,21 @@ Country Rankings (MEPS Score)
     4. Ghana 🇬🇭 → 0.69
 
 
-🔍 Key Insights
+Key Insights
     Countries with strong mobile money ecosystems outperform in crypto adoption potential
     Demand signals (Google Trends) strongly correlate with transaction volume proxies
     Infrastructure readiness is a gating factor for exchange expansion
     Market size alone does not guarantee crypto adoption
 
 
-📊 Visualizations
+Visualizations
     Country MEPS ranking bar chart
     Correlation heatmap of indicators
     Demand vs adoption scatter plots
     Infrastructure readiness comparison
 
 
-🚀 How to Run This Project
+How to Run This Project
     git clone https://github.com/yourusername/africa-crypto-meps.git
     cd africa-crypto-meps
     pip install -r requirements.txt
@@ -157,14 +150,14 @@ Run notebooks in order:
     Visualization
 
 
-⚠️ Limitations
+Limitations
     Uses proxy indicators where direct crypto adoption data is unavailable
     Weights are initially heuristic (can be optimized using PCA or regression)
     Informal crypto activity is not fully captured
     Data availability varies across countries
 
 
-📌 Future Improvements
+Future Improvements
     Automate Google Trends ingestion pipeline
     Add real-time CoinGecko streaming layer
     Replace heuristic weights with ML-learned weights
