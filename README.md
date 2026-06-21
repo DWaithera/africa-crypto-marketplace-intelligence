@@ -1,4 +1,4 @@
-Africa Crypto Market Intelligence System (MEPS)**
+Africa Crypto Market Intelligence System (MEPS)
 
 
 Overview
