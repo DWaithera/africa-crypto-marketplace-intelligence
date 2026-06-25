@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 3 — Google Trends | Africa Crypto Intelligence</title>
+<style>
+  :root {
+    --bg:#080b10;--bg2:#0e1219;--bg3:#141820;--bg4:#1a2030;
+    --border:#1e2535;--bord2:#262e42;
+    --text:#e4e8f2;--text2:#8a93b0;--text3:#4a5270;
+    --blue:#4f8ef7;--purple:#8b5cf6;--green:#10d97e;
+    --amber:#f5a623;--red:#ef4444;--teal:#0fd4c4;--pink:#f472b6;
+    --mono:'Courier New','Menlo',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.65;}
+
+  .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32px;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;height:52px;}
+  .header-left{display:flex;align-items:center;gap:14px;}
+  .project-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);padding:3px 10px;border-radius:20px;}
+  .header-title{font-size:13px;font-weight:600;}
+  .day-badge{font-size:11px;font-weight:700;color:var(--green);background:rgba(16,217,126,.1);border:1px solid rgba(16,217,126,.2);padding:3px 12px;border-radius:20px;}
+  .progress-wrap{display:flex;align-items:center;gap:8px;}
+  .prog-bar{width:100px;height:3px;background:var(--bord2);border-radius:2px;}
+  .prog-fill{height:3px;border-radius:2px;background:var(--green);transition:width .4s;}
+  .prog-label{font-size:11px;font-weight:700;color:var(--green);min-width:30px;}
+
+  .layout{display:flex;min-height:calc(100vh - 52px);}
+
+  .sidebar{width:210px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:20px 0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
+  .sb-section{padding:0 14px;margin-bottom:10px;}
+  .sb-label{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);padding:6px 4px 4px;display:block;}
+  .sb-item{display:flex;align-items:center;gap:10px;width:100%;padding:7px 8px;border-radius:7px;border:none;background:transparent;color:var(--text2);font-size:12px;cursor:pointer;text-align:left;text-decoration:none;transition:all .15s;margin-bottom:2px;}
+  .sb-item:hover{background:var(--bg3);color:var(--text);}
+  .sb-item.active{background:rgba(79,142,247,.1);color:var(--blue);}
+  .sb-dot{width:7px;height:7px;border-radius:50%;background:var(--bord2);flex-shrink:0;}
+  .sb-item.done .sb-dot{background:var(--green);}
+  .sb-item.active .sb-dot{background:var(--blue);}
+  .sb-check{margin-left:auto;font-size:10px;color:var(--green);opacity:0;}
+  .sb-item.done .sb-check{opacity:1;}
+
+  .main{flex:1;padding:28px 32px;max-width:860px;}
+
+  .day-hero{background:linear-gradient(135deg,rgba(79,142,247,.07) 0%,rgba(139,92,246,.05) 100%);border:1px solid rgba(79,142,247,.15);border-radius:12px;padding:24px 28px;margin-bottom:24px;position:relative;overflow:hidden;}
+  .day-hero::before{content:'D3';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:80px;font-weight:900;color:rgba(79,142,247,.06);font-family:var(--mono);}
+  .day-eyebrow{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+  .day-title{font-size:24px;font-weight:800;line-height:1.15;margin-bottom:8px;}
+  .day-subtitle{font-size:13px;color:var(--text2);max-width:560px;line-height:1.55;margin-bottom:16px;}
+  .day-stats{display:flex;gap:12px;flex-wrap:wrap;}
+  .dstat{background:rgba(255,255,255,.03);border:1px solid var(--bord2);border-radius:8px;padding:8px 16px;}
+  .dstat-val{font-size:17px;font-weight:800;font-family:var(--mono);}
+  .dstat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:1px;}
+
+  .fix-box{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:16px 20px;margin-bottom:20px;}
+  .fix-title{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+  .fix-text{font-size:12px;color:#e88;line-height:1.65;}
+  .fix-text strong{color:#f99;}
+
+  .concept-box{background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.18);border-radius:10px;padding:16px 20px;margin-bottom:20px;}
+  .concept-title{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+  .concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .concept-item{background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.1);border-radius:7px;padding:10px 12px;}
+  .concept-term{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;font-family:var(--mono);}
+  .concept-def{font-size:11px;color:var(--text2);line-height:1.5;}
+
+  .deliver-box{background:rgba(16,212,196,.05);border:1px solid rgba(16,212,196,.2);border-radius:10px;padding:16px 20px;margin-bottom:24px;}
+  .deliver-title{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+  .deliver-title::before{content:'▶';font-size:8px;}
+  .deliver-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .deliver-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2);padding:6px 10px;background:rgba(16,212,196,.03);border:1px solid rgba(16,212,196,.1);border-radius:6px;}
+  .deliver-item::before{content:'→';color:var(--teal);flex-shrink:0;font-weight:700;}
+
+  .section-label{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin:28px 0 12px;display:flex;align-items:center;gap:8px;}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  .session-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden;scroll-margin-top:68px;}
+  .session-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg3);}
+  .session-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;}
+  .badge-s1{background:rgba(79,142,247,.15);color:var(--blue);border:1px solid rgba(79,142,247,.25);}
+  .badge-s2{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.25);}
+  .session-title{font-size:14px;font-weight:700;flex:1;}
+  .session-meta{font-size:11px;color:var(--text3);}
+  .session-check{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--bord2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px;transition:all .2s;flex-shrink:0;}
+  .session-check:hover{border-color:var(--green);color:var(--green);}
+  .session-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+  .session-body{padding:20px;}
+
+  .steps{list-style:none;}
+  .step-item{display:flex;gap:14px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+  .step-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .step-num{width:24px;height:24px;border-radius:6px;background:var(--bg4);border:1px solid var(--bord2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--text3);font-family:var(--mono);flex-shrink:0;margin-top:2px;}
+  .step-content{flex:1;}
+  .step-title{font-size:13px;font-weight:700;margin-bottom:5px;}
+  .step-desc{font-size:12px;color:var(--text2);line-height:1.6;}
+  .step-desc strong{color:var(--text);font-weight:600;}
+
+  .code-wrap{background:#060810;border:1px solid var(--bord2);border-radius:8px;margin:10px 0;overflow:hidden;}
+  .code-top{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;background:var(--bg4);border-bottom:1px solid var(--border);}
+  .code-lang{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
+  .copy-btn{font-size:10px;color:var(--text3);background:transparent;border:1px solid var(--bord2);cursor:pointer;padding:2px 10px;border-radius:4px;font-family:var(--mono);transition:all .15s;}
+  .copy-btn:hover{border-color:var(--blue);color:var(--blue);}
+  pre{padding:14px 16px;font-family:var(--mono);font-size:12px;color:#9aa8c8;overflow-x:auto;line-height:1.75;}
+
+  .expected-box{background:rgba(16,217,126,.04);border:1px solid rgba(16,217,126,.15);border-radius:7px;padding:10px 14px;margin:10px 0;font-size:12px;color:#4acea0;font-family:var(--mono);line-height:1.7;}
+  .expected-label{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:5px;font-family:'Segoe UI',sans-serif;}
+
+  .mentor-alert{background:rgba(245,166,35,.05);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0;}
+  .mentor-header{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:5px;}
+  .mentor-text{font-size:12px;color:#c9a44a;line-height:1.6;}
+
+  .warn-alert{background:rgba(239,68,68,.05);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0;}
+  .warn-text{font-size:12px;color:#e88;line-height:1.6;}
+
+  .info-note{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--blue);background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:6px;padding:5px 12px;margin:6px 0;}
+
+  .checklist{list-style:none;margin:10px 0;}
+  .checklist-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--text2);padding:5px 0;}
+  .check-box{width:16px;height:16px;border:1.5px solid var(--bord2);border-radius:4px;background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;transition:all .15s;margin-top:2px;}
+  .check-box:hover{border-color:var(--green);}
+  .check-box.checked{background:var(--green);border-color:var(--green);color:#fff;}
+  .checklist-item.checked-item>span{text-decoration:line-through;color:var(--text3);}
+
+  .publish-box{background:rgba(244,114,182,.05);border:1px solid rgba(244,114,182,.2);border-radius:10px;padding:16px 20px;margin-top:20px;}
+  .publish-title{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+  .publish-title::before{content:'📣';font-size:12px;}
+  .platform-block{margin-bottom:14px;}
+  .platform-block:last-child{margin-bottom:0;}
+  .platform-name{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+  .platform-copy-btn{float:right;font-size:9px;background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.2);color:var(--pink);padding:2px 8px;border-radius:4px;cursor:pointer;font-family:var(--mono);transition:all .15s;margin-top:-2px;}
+  .platform-copy-btn:hover{background:rgba(244,114,182,.2);}
+  .platform-text{font-size:12px;color:var(--text2);line-height:1.65;white-space:pre-line;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:6px;padding:10px 12px;clear:both;}
+
+  .next-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:32px;}
+  .next-title{font-size:13px;font-weight:700;margin-bottom:10px;}
+  .next-desc{font-size:12px;color:var(--text2);line-height:1.65;}
+
+  .col-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12px;}
+  .col-table th{text-align:left;padding:7px 10px;background:var(--bg4);color:var(--text3);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--bord2);}
+  .col-table td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text2);}
+  .col-table td:first-child{font-family:var(--mono);color:var(--teal);font-size:11px;}
+  .col-table tr:last-child td{border-bottom:none;}
+
+  @media(max-width:680px){
+    .sidebar{display:none;}
+    .main{padding:16px;}
+    .deliver-grid,.concept-grid{grid-template-columns:1fr;}
+    .day-hero::before{display:none;}
+    .header{padding:0 14px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="project-tag">Project 1 · Africa Crypto Intelligence</span>
+    <span class="header-title">Execution Guide</span>
+  </div>
+  <div class="header-right">
+    <span class="day-badge">Day 3 of 16</span>
+    <div class="progress-wrap">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <span class="prog-label" id="prog-label">0%</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="sb-section">
+    <span class="sb-label">Today's Sessions</span>
+    <a class="sb-item active" href="#fix" id="nav-fix">
+      <div class="sb-dot" style="background:var(--red)"></div>Fix First
+      <span class="sb-check">✓</span>
+    </a>
+    <a class="sb-item" href="#session1" id="nav-s1">
+      <div class="sb-dot"></div>Session 1 — Pull Trends
+      <span class="sb-check">✓</span>
+    </a>
+    <a class="sb-item" href="#session2" id="nav-s2">
+      <div class="sb-dot"></div>Session 2 — Demand Index
+      <span class="sb-check">✓</span>
+    </a>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Deliverables</span>
+    <a class="sb-item" href="#checklist"><div class="sb-dot" style="background:var(--teal)"></div>Final Checklist</a>
+    <a class="sb-item" href="#publish"><div class="sb-dot" style="background:var(--pink)"></div>Publish Content</a>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Week 1</span>
+    <a class="sb-item" href="#" style="opacity:.4;cursor:default"><div class="sb-dot" style="background:var(--green)"></div>Day 1 ✓</a>
+    <a class="sb-item" href="#" style="opacity:.4;cursor:default"><div class="sb-dot" style="background:var(--green)"></div>Day 2 ✓</a>
+    <a class="sb-item done" href="#" style="cursor:default"><div class="sb-dot"></div>Day 3 — Today<span class="sb-check">→</span></a>
+    <a class="sb-item" href="#" style="opacity:.4;cursor:default"><div class="sb-dot"></div>Day 4 — World Bank</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <div class="day-hero">
+    <div class="day-eyebrow">Week 1 · Day 3 · Friday</div>
+    <div class="day-title">Google Trends —<br>Country Demand Signals</div>
+    <div class="day-subtitle">Pull 52 weeks of crypto search interest across Kenya, Nigeria, Ghana, and South Africa. Build a Demand Index per country. This is the signal that tells you where people are actively looking for crypto before they trade it.</div>
+    <div class="day-stats">
+      <div class="dstat"><div class="dstat-val">4</div><div class="dstat-lbl">Countries</div></div>
+      <div class="dstat"><div class="dstat-val">3</div><div class="dstat-lbl">Keywords</div></div>
+      <div class="dstat"><div class="dstat-val">52</div><div class="dstat-lbl">Weeks data</div></div>
+      <div class="dstat"><div class="dstat-val">2</div><div class="dstat-lbl">CSVs saved</div></div>
+    </div>
+  </div>
+
+  <!-- FIX FIRST -->
+  <div class="fix-box" id="fix">
+    <div class="fix-title">⚠ Fix Before You Start — File Location Issue</div>
+    <div class="fix-text">
+      Your CSV is currently saved at <strong>WEEK 1\notebooks\crypto_market_data.csv</strong><br>
+      It must be at <strong>WEEK 1\data\crypto_market_data.csv</strong><br><br>
+      Open your terminal and run these commands in order:
+    </div>
+    <div class="code-wrap" style="margin-top:12px">
+      <div class="code-top"><span class="code-lang">bash — terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>cd "C:\Users\User\Desktop\DATA ANALYTICS\FLAGSHIPS\P1 AFRICA CRYPTO MARKET\WEEK 1"
+move notebooks\crypto_market_data.csv data\crypto_market_data.csv</pre>
+    </div>
+    <div class="fix-text" style="margin-top:10px">
+      Then verify:
+    </div>
+    <div class="code-wrap" style="margin-top:8px">
+      <div class="code-top"><span class="code-lang">bash — terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre>dir data</pre>
+    </div>
+    <div class="fix-text" style="margin-top:8px">You should see <strong>crypto_market_data.csv</strong> listed inside the data folder. Only then proceed.</div>
+  </div>
+
+  <!-- CONCEPTS -->
+  <div class="concept-box">
+    <div class="concept-title">Concepts you need before you start</div>
+    <div class="concept-grid">
+      <div class="concept-item">
+        <div class="concept-term">pytrends</div>
+        <div class="concept-def">An unofficial Python wrapper for Google Trends. It scrapes the same data you see on trends.google.com — no API key needed, but it has strict rate limits.</div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-term">Google Trends scale (0–100)</div>
+        <div class="concept-def">Google does NOT return raw search counts. It returns a relative interest score. 100 = peak interest in that period. 50 = half the peak. 0 = not enough data. Always relative, never absolute.</div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-term">geo code</div>
+        <div class="concept-def">Google Trends uses ISO country codes: KE = Kenya, NG = Nigeria, GH = Ghana, ZA = South Africa. Pass these to pytrends to get country-specific data.</div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-term">timeframe</div>
+        <div class="concept-def">"today 52-w" means the last 52 weeks from today. This gives weekly data points — one per week. Do not use "today 12-m" — it gives monthly data which is too coarse.</div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-term">429 error</div>
+        <div class="concept-def">Google has blocked your IP temporarily for too many requests. It is not an error in your code. Wait 60 seconds minimum, then retry only the failed call. Never retry in a loop.</div>
+      </div>
+      <div class="concept-item">
+        <div class="concept-term">Demand Index</div>
+        <div class="concept-def">A composite score you build by averaging the search interest across all 3 keywords (bitcoin, USDT, crypto) per country per week. One number that represents total crypto demand.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELIVERABLES -->
+  <div class="deliver-box">
+    <div class="deliver-title">Day 3 Deliverables</div>
+    <div class="deliver-grid">
+      <div class="deliver-item">02_google_trends.ipynb created in notebooks/</div>
+      <div class="deliver-item">google_trends_raw.csv — 52 weeks × 4 countries × 3 keywords</div>
+      <div class="deliver-item">google_trends_demand_index.csv — one demand score per country per week</div>
+      <div class="deliver-item">Both CSVs in data/ folder, committed to GitHub</div>
+    </div>
+  </div>
+
+  <!-- SESSION 1 -->
+  <div class="section-label">Session 1</div>
+  <div class="session-block" id="session1">
+    <div class="session-header">
+      <span class="session-badge badge-s1">Session 1</span>
+      <span class="session-title">Pull Google Trends data for all 4 countries</span>
+      <span class="session-meta">2 hours</span>
+      <button class="session-check" id="s1-check" onclick="toggleSession(1)">✓</button>
+    </div>
+    <div class="session-body">
+      <ul class="steps">
+
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Install pytrends if not already installed</div>
+            <div class="step-desc">Open your Anaconda terminal and run:</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">bash — terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>pip install pytrends</pre>
+            </div>
+            <div class="step-desc" style="margin-top:8px">Wait for it to complete. Then open Jupyter Notebook, navigate to your <strong>WEEK 1\notebooks\</strong> folder, and create a new notebook named <strong>02_google_trends</strong>.</div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Cell 1 — Imports and configuration</div>
+            <div class="step-desc">Type every line. Read each import and understand what it does before running.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 1</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>from pytrends.request import TrendReq
+import pandas as pd
+import time
+import os
+
+# Configuration — all settings in one place
+KEYWORDS   = ["bitcoin", "USDT", "crypto"]
+COUNTRIES  = {
+    "Kenya":        "KE",
+    "Nigeria":      "NG",
+    "Ghana":        "GH",
+    "South Africa": "ZA"
+}
+TIMEFRAME  = "today 52-w"   # 52 weeks of weekly data
+OUTPUT_DIR = "../data"
+
+# Initialise pytrends connection
+pytrends = TrendReq(hl="en-US", tz=180)  # tz=180 = UTC+3 (Nairobi time)
+
+print("Configuration ready.")
+print(f"Keywords:  {KEYWORDS}")
+print(f"Countries: {list(COUNTRIES.keys())}")
+print(f"Timeframe: {TIMEFRAME}")</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output</div>
+              Configuration ready.<br>
+              Keywords:  ['bitcoin', 'USDT', 'crypto']<br>
+              Countries: ['Kenya', 'Nigeria', 'Ghana', 'South Africa']<br>
+              Timeframe: today 52-w
+            </div>
+            <div class="mentor-alert">
+              <div class="mentor-header">Why these 3 keywords?</div>
+              <div class="mentor-text">
+                <strong>bitcoin</strong> — broad crypto awareness. The entry point search for new users.<br>
+                <strong>USDT</strong> — this is the critical P2P signal. USDT dominates African P2P volume on Binance. High USDT search = high stablecoin demand = active P2P corridor.<br>
+                <strong>crypto</strong> — general market interest. Captures users who haven't yet committed to a specific asset.<br><br>
+                Together these 3 keywords cover the full funnel: awareness → stablecoin intent → general interest. Your 9 years of P2P trading is why you know USDT belongs here. Most data analysts would not think to include it.
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Cell 2 — Write the pull function with rate limit protection</div>
+            <div class="step-desc">This function is more defensive than the CoinGecko one. Google Trends will block you faster. Read the retry logic carefully — it is not optional.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 2</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>def pull_trends(keyword, geo_code, country_name, retries=3):
+    """
+    Pull Google Trends data for one keyword in one country.
+    Returns a DataFrame with date and interest score (0-100).
+    Retries up to 3 times on failure with increasing wait.
+    """
+    for attempt in range(retries):
+        try:
+            # Build the payload — tell pytrends what to search
+            pytrends.build_payload(
+                kw_list=[keyword],
+                geo=geo_code,
+                timeframe=TIMEFRAME
+            )
+
+            # Pull interest over time
+            df = pytrends.interest_over_time()
+
+            if df.empty:
+                print(f"  No data returned for {keyword} in {country_name}")
+                return None
+
+            # Clean up
+            df = df.reset_index()
+            df = df.rename(columns={keyword: "interest", "date": "week"})
+            df = df[["week", "interest"]]
+            df["keyword"]  = keyword
+            df["country"]  = country_name
+            df["geo_code"] = geo_code
+
+            return df
+
+        except Exception as e:
+            wait = 60 * (attempt + 1)   # 60s, 120s, 180s
+            print(f"  Attempt {attempt+1} failed: {e}")
+            print(f"  Waiting {wait} seconds before retry...")
+            time.sleep(wait)
+
+    print(f"  FAILED after {retries} retries: {keyword} / {country_name}")
+    return None
+
+print("Function defined.")</pre>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Cell 3 — Test with ONE keyword in ONE country first</div>
+            <div class="step-desc">Never run all 12 combinations before confirming the function works. Test with Kenya + bitcoin only.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 3</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre># Test: Kenya + bitcoin only
+print("Testing: bitcoin / Kenya...")
+df_test = pull_trends("bitcoin", "KE", "Kenya")
+
+if df_test is not None:
+    print(f"\nSuccess! Shape: {df_test.shape}")
+    print(df_test.head(3))
+else:
+    print("Test failed. Check your internet connection.")</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output</div>
+              Testing: bitcoin / Kenya...<br><br>
+              Success! Shape: (52, 5)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;week&nbsp;&nbsp;interest&nbsp;&nbsp;keyword&nbsp;&nbsp;country&nbsp;&nbsp;geo_code<br>
+              0&nbsp;&nbsp;2024-06-16&nbsp;&nbsp;&nbsp;&nbsp;45&nbsp;&nbsp;&nbsp;&nbsp;bitcoin&nbsp;&nbsp;&nbsp;&nbsp;Kenya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KE<br>
+              1&nbsp;&nbsp;2024-06-23&nbsp;&nbsp;&nbsp;&nbsp;52&nbsp;&nbsp;&nbsp;&nbsp;bitcoin&nbsp;&nbsp;&nbsp;&nbsp;Kenya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KE<br>
+              2&nbsp;&nbsp;2024-06-30&nbsp;&nbsp;&nbsp;&nbsp;38&nbsp;&nbsp;&nbsp;&nbsp;bitcoin&nbsp;&nbsp;&nbsp;&nbsp;Kenya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KE
+            </div>
+            <div class="warn-alert">
+              <div class="warn-text">⚠ <strong>Got an empty DataFrame or 429 error?</strong> Wait 60 seconds. Do not re-run yet. After waiting, re-run only Cell 3. If it fails 3 times in a row, your IP has been temporarily blocked. Close Jupyter, wait 10 minutes, reopen and try again.</div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Cell 4 — Pull all 12 combinations with sleep between each</div>
+            <div class="step-desc">12 pulls total: 4 countries × 3 keywords. The 45-second sleep between each call is mandatory. This cell will take approximately <strong>10–12 minutes</strong> to complete. Do not close Jupyter or your laptop while it runs.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 4</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>all_results = []
+total       = len(COUNTRIES) * len(KEYWORDS)
+count       = 0
+
+for country_name, geo_code in COUNTRIES.items():
+    for keyword in KEYWORDS:
+        count += 1
+        print(f"[{count}/{total}] Pulling: {keyword} / {country_name}...")
+
+        df = pull_trends(keyword, geo_code, country_name)
+
+        if df is not None:
+            all_results.append(df)
+            print(f"  ✓ {len(df)} rows")
+        else:
+            print(f"  ✗ Skipped")
+
+        # Sleep between every call — non-negotiable
+        if count < total:
+            print(f"  Sleeping 45 seconds...")
+            time.sleep(45)
+
+print(f"\nDone. {len(all_results)} of {total} pulls succeeded.")</pre>
+            </div>
+            <div class="info-note">ℹ This cell runs for 10–12 minutes. That is normal. Leave it running.</div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output (truncated)</div>
+              [1/12] Pulling: bitcoin / Kenya...<br>
+              &nbsp;&nbsp;✓ 52 rows<br>
+              &nbsp;&nbsp;Sleeping 45 seconds...<br>
+              [2/12] Pulling: USDT / Kenya...<br>
+              &nbsp;&nbsp;✓ 52 rows<br>
+              ...<br>
+              Done. 12 of 12 pulls succeeded.
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-title">Cell 5 — Combine and save raw data</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 5</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre># Combine all results into one DataFrame
+df_raw = pd.concat(all_results, ignore_index=True)
+
+# Convert week to datetime
+df_raw["week"] = pd.to_datetime(df_raw["week"])
+
+# Sort for readability
+df_raw = df_raw.sort_values(["country", "keyword", "week"]).reset_index(drop=True)
+
+print(f"Raw dataset shape: {df_raw.shape}")
+print(f"Columns: {df_raw.columns.tolist()}")
+print(f"Countries: {df_raw.country.unique().tolist()}")
+print(f"Keywords:  {df_raw.keyword.unique().tolist()}")
+print(f"Weeks:     {df_raw.week.nunique()} unique weeks")
+print(f"\nNull check:")
+print(df_raw.isnull().sum())
+
+# Save raw CSV
+raw_path = f"{OUTPUT_DIR}/google_trends_raw.csv"
+df_raw.to_csv(raw_path, index=False)
+print(f"\nSaved: {raw_path}")</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output</div>
+              Raw dataset shape: (624, 5)<br>
+              Columns: ['week', 'interest', 'keyword', 'country', 'geo_code']<br>
+              Countries: ['Ghana', 'Kenya', 'Nigeria', 'South Africa']<br>
+              Keywords:  ['USDT', 'bitcoin', 'crypto']<br>
+              Weeks:     52 unique weeks
+            </div>
+            <div class="mentor-alert">
+              <div class="mentor-header">Why 624 rows?</div>
+              <div class="mentor-text">52 weeks × 4 countries × 3 keywords = 624 rows. This is your raw long-format dataset. Each row is one keyword, one country, one week. This format is correct — it is called tidy data and it is the standard for analytical datasets. You will pivot it in Session 2.</div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- SESSION 2 -->
+  <div class="section-label">Session 2</div>
+  <div class="session-block" id="session2">
+    <div class="session-header">
+      <span class="session-badge badge-s2">Session 2</span>
+      <span class="session-title">Build the Demand Index and merge with market data</span>
+      <span class="session-meta">2 hours</span>
+      <button class="session-check" id="s2-check" onclick="toggleSession(2)">✓</button>
+    </div>
+    <div class="session-body">
+      <ul class="steps">
+
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Cell 6 — Build the Demand Index per country per week</div>
+            <div class="step-desc">The raw data has 3 separate rows per country per week (one per keyword). You need to collapse them into one row with one demand score. You do this by averaging the interest across all 3 keywords. That average IS your Demand Index.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 6</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre># Pivot: one row per country per week, one column per keyword
+df_pivot = df_raw.pivot_table(
+    index=["week", "country"],
+    columns="keyword",
+    values="interest"
+).reset_index()
+
+# Flatten column names
+df_pivot.columns.name = None
+df_pivot = df_pivot.rename(columns={
+    "bitcoin": "interest_bitcoin",
+    "USDT":    "interest_USDT",
+    "crypto":  "interest_crypto"
+})
+
+# Build Demand Index: equal weight average of all 3 keywords
+df_pivot["demand_index_raw"] = df_pivot[[
+    "interest_bitcoin",
+    "interest_USDT",
+    "interest_crypto"
+]].mean(axis=1)
+
+# Normalize to 0–100 per country (so countries are comparable)
+def normalize_0_100(series):
+    min_val = series.min()
+    max_val = series.max()
+    if max_val == min_val:
+        return series * 0
+    return (series - min_val) / (max_val - min_val) * 100
+
+df_pivot["demand_index"] = df_pivot.groupby("country")["demand_index_raw"].transform(
+    normalize_0_100
+).round(2)
+
+print(f"Demand Index shape: {df_pivot.shape}")
+print(f"Columns: {df_pivot.columns.tolist()}")
+print(f"\nSample — Kenya:")
+print(df_pivot[df_pivot.country == "Kenya"].tail(5))</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output</div>
+              Demand Index shape: (208, 7)<br>
+              Columns: ['week', 'country', 'interest_bitcoin', 'interest_USDT', 'interest_crypto', 'demand_index_raw', 'demand_index']<br><br>
+              Sample — Kenya:<br>
+              &nbsp;&nbsp;week&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;country&nbsp;&nbsp;interest_bitcoin&nbsp;&nbsp;interest_USDT&nbsp;&nbsp;interest_crypto&nbsp;&nbsp;demand_index_raw&nbsp;&nbsp;demand_index<br>
+              &nbsp;&nbsp;2025-05-18&nbsp;&nbsp;Kenya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;72&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;45&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;61&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;59.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;74.2
+            </div>
+            <div class="mentor-alert">
+              <div class="mentor-header">Why normalize per country, not globally?</div>
+              <div class="mentor-text">Nigeria has a much larger internet population than Ghana. Raw interest scores would make Nigeria look dominant in every single week — not because demand is higher, but because the search volume baseline is higher. Normalizing per country makes the score reflect trend direction within each country. You are asking "is demand rising in Ghana?" not "does Ghana have more searches than Nigeria?" That is the correct analytical question for market expansion decisions.</div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Cell 7 — Country demand summary (the insight table)</div>
+            <div class="step-desc">Before saving, produce the insight table. This is what you will screenshot for your LinkedIn post.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 7</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre># Summary: average demand index per country across all 52 weeks
+summary = df_pivot.groupby("country").agg(
+    avg_demand        = ("demand_index",     "mean"),
+    peak_demand       = ("demand_index",     "max"),
+    avg_btc_interest  = ("interest_bitcoin", "mean"),
+    avg_usdt_interest = ("interest_USDT",    "mean"),
+    avg_crypto_int    = ("interest_crypto",  "mean")
+).round(2).sort_values("avg_demand", ascending=False).reset_index()
+
+print("=== DEMAND INDEX SUMMARY — 52 WEEKS ===")
+print(summary.to_string(index=False))
+
+# Which country had the highest USDT interest?
+print(f"\nHighest USDT interest: {summary.loc[summary.avg_usdt_interest.idxmax(), 'country']}")
+print(f"  Score: {summary.avg_usdt_interest.max()}")</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output (values will vary)</div>
+              === DEMAND INDEX SUMMARY — 52 WEEKS ===<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;country&nbsp;&nbsp;avg_demand&nbsp;&nbsp;peak_demand&nbsp;&nbsp;avg_btc_interest&nbsp;&nbsp;avg_usdt_interest&nbsp;&nbsp;avg_crypto_int<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nigeria&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;61.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;72&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;68&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;58<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kenya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;54.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;98.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;65&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;71&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;52
+            </div>
+            <div class="step-desc" style="margin-top:10px"><strong>Screenshot this table.</strong> This is your first real analytical output — a country ranking by crypto demand. This is what goes in your post tonight.</div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Cell 8 — Save the Demand Index CSV</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 8</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre># Save the demand index dataset
+demand_path = f"{OUTPUT_DIR}/google_trends_demand_index.csv"
+df_pivot.to_csv(demand_path, index=False)
+
+# Save the summary table too
+summary_path = f"{OUTPUT_DIR}/google_trends_summary.csv"
+summary.to_csv(summary_path, index=False)
+
+# Verify
+print(f"Saved: {demand_path}")
+print(f"Saved: {summary_path}")
+print(f"\nDemand index shape: {df_pivot.shape}")
+print(f"Summary shape:      {summary.shape}")
+print(f"\nNull check — demand index:")
+print(df_pivot.isnull().sum())</pre>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Cell 9 — Update EOS_METHODOLOGY.md</div>
+            <div class="step-desc">Open your <strong>docs/EOS_METHODOLOGY.md</strong> file in Notepad. Add this section at the bottom:</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">markdown — docs/EOS_METHODOLOGY.md</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>## Dimension 1: Demand (Weight: 25%)
+
+**Source:** Google Trends via pytrends
+**Keywords:** bitcoin, USDT, crypto
+**Geography:** KE, NG, GH, ZA
+**Timeframe:** 52 weeks weekly data
+
+**Methodology:**
+1. Pull weekly interest (0-100) for each keyword per country
+2. Average across 3 keywords to get demand_index_raw
+3. Normalize per country to 0-100 to remove population size bias
+
+**Rationale:**
+USDT included because it dominates African P2P volume on Binance.
+High USDT search interest is a leading indicator of P2P corridor
+activity — it signals users who are ready to transact, not just
+curious about crypto. This insight comes from 9 years of P2P
+market experience.
+
+**Files:**
+- data/google_trends_raw.csv
+- data/google_trends_demand_index.csv
+- data/google_trends_summary.csv</pre>
+            </div>
+            <div class="step-desc" style="margin-top:8px">Save the file. This documentation is what turns your project from a notebook into a system that can be audited and reproduced.</div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Cell 10 — Commit everything to GitHub</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">bash — terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>cd "C:\Users\User\Desktop\DATA ANALYTICS\FLAGSHIPS\P1 AFRICA CRYPTO MARKET"
+git add .
+git commit -m "Day 3: Google Trends demand signals — 4 countries, 3 keywords, 52 weeks, Demand Index built"
+git push</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output</div>
+              [main xxxxxxx] Day 3: Google Trends demand signals — 4 countries, 3 keywords, 52 weeks, Demand Index built<br>
+              3 files changed, ...
+            </div>
+            <div class="step-desc" style="margin-top:8px">Go to your GitHub repo and confirm you see: <strong>notebooks/02_google_trends.ipynb</strong>, <strong>data/google_trends_raw.csv</strong>, <strong>data/google_trends_demand_index.csv</strong>, <strong>docs/EOS_METHODOLOGY.md</strong>.</div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="section-label" id="checklist">End of Day Checklist</div>
+  <div class="deliver-box" style="margin-bottom:20px">
+    <div class="deliver-title">Tick every item before you close your laptop</div>
+    <ul class="checklist">
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>crypto_market_data.csv moved from notebooks/ to data/ folder</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>pytrends installed and import test passed</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>Single test pull succeeded: bitcoin / Kenya / 52 rows</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>All 12 combinations pulled (4 countries × 3 keywords) — 624 rows in raw CSV</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>Demand Index built and normalized per country (0–100)</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>Country summary table printed — screenshot taken</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>google_trends_raw.csv, google_trends_demand_index.csv, google_trends_summary.csv all saved in data/</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>EOS_METHODOLOGY.md updated with Dimension 1 documentation</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>All files committed and pushed to GitHub</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>LinkedIn, X, and TikTok posts published</span></li>
+    </ul>
+  </div>
+
+  <!-- PUBLISH -->
+  <div class="section-label" id="publish">Publish Today</div>
+  <div class="publish-box">
+    <div class="publish-title">Content to Publish — Day 3</div>
+
+    <div class="platform-block">
+      <div class="platform-name">LinkedIn</div>
+      <button class="platform-copy-btn" onclick="copyPlatform(this)">copy</button>
+      <div class="platform-text">9 years on African P2P crypto markets taught me one thing nobody talks about:
+
+USDT search volume predicts P2P activity.
+
+Before traders hit Binance P2P, they search. They search "USDT" before they buy. They search "bitcoin" before they sell. That search behaviour is a leading indicator — it moves before the transaction data does.
+
+Day 3 of my Africa Crypto Market Intelligence System: I measured it.
+
+Pulled 52 weeks of Google Trends data across Kenya, Nigeria, Ghana, and South Africa — tracking 3 keywords: bitcoin, USDT, and crypto.
+
+Then built a Demand Index per country.
+
+One normalized score (0–100) that captures the full demand funnel:
+→ Are people becoming aware? (bitcoin searches)
+→ Are people ready to transact? (USDT searches)
+→ Is general interest growing? (crypto searches)
+
+The country ranking from this week's data is already telling a story.
+
+I won't reveal the numbers yet — that comes in the final report.
+
+But the system is working.
+
+github.com/DWaithera/africa-crypto-intelligence
+
+#DataAnalytics #CryptoAfrica #Python #BuildingInPublic #AfricaTech #Binance #P2P</div>
+    </div>
+
+    <div class="platform-block">
+      <div class="platform-name">X / Twitter</div>
+      <button class="platform-copy-btn" onclick="copyPlatform(this)">copy</button>
+      <div class="platform-text">Day 3 done.
+
+Before P2P traders hit Binance, they search Google.
+"USDT" searches are a leading indicator of P2P volume.
+I know this from 9 years of trading. Now I measured it.
+
+52 weeks. 4 countries. 3 keywords.
+One Demand Index per country. Normalized. Comparable.
+
+The country rankings are already interesting.
+
+Day 3 of 16 👇
+github.com/DWaithera/africa-crypto-intelligence</div>
+    </div>
+
+    <div class="platform-block">
+      <div class="platform-name">TikTok — script</div>
+      <button class="platform-copy-btn" onclick="copyPlatform(this)">copy</button>
+      <div class="platform-text">SCRIPT — Start on camera, flip to screen
+
+[On camera]
+"Here's something I learned from 9 years of trading crypto in Africa: people search before they trade. They search 'USDT' before they go to Binance P2P. That search behaviour is a signal."
+
+[Flip to screen — show the summary table]
+"Today I measured it. This is 52 weeks of Google Trends data across Kenya, Nigeria, Ghana, and South Africa. Three keywords — bitcoin, USDT, and crypto."
+
+[Point to the demand_index column]
+"And this is the Demand Index. One score per country per week. Who is searching the most? Where is demand actually growing?"
+
+[Show the country ranking]
+"The numbers are already telling a story. Day 3 of 16."
+
+CAPTION:
+I tracked crypto search demand across 4 African countries for 52 weeks 📊 Built a Demand Index from Google Trends data. USDT searches predict P2P trading activity. 9 years of trading told me that. Data confirmed it. Day 3 of 16. #CryptoAfrica #DataAnalytics #Python #BuildingInPublic #Nairobi</div>
+    </div>
+  </div>
+
+  <!-- NEXT -->
+  <div class="section-label">What Comes Next</div>
+  <div class="next-box">
+    <div class="next-title">Day 4 — World Bank Data: Infrastructure + Financial Access</div>
+    <div class="next-desc">
+      You will pull banked population percentage, mobile money penetration, and remittance inflows for all 4 countries from the World Bank API using the <strong>wbgapi</strong> Python library. These are your Infrastructure and Financial Access dimensions for the EOS scoring model.<br><br>
+      This is static country-level data — it does not change week to week. One clean CSV, 4 rows, multiple indicators. Fast to pull, high analytical value.<br><br>
+      <strong>Before Day 4:</strong> Look up what the World Bank Findex 2022 is. Search "World Bank Global Findex 2022" and read the one-page overview. Understand what "account ownership" means in the context of financial inclusion. You will be working with this data directly.
+    </div>
+    <div class="mentor-alert" style="margin-top:14px">
+      <div class="mentor-header">Your assignment tonight</div>
+      <div class="mentor-text">Look at your demand_index summary table. Find the country with the highest USDT interest score. Now ask yourself: does that match what you observed as a P2P trader? If the data contradicts your instinct, that is not an error — that is a finding. Write one sentence in your notebook (as a markdown cell) about what you expected versus what the data showed. That annotation is what separates analysis from data collection.</div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+const sessionState={fix:false,1:false,2:false};
+
+function toggleSession(n){
+  sessionState[n]=!sessionState[n];
+  const btn=document.getElementById('s'+n+'-check');
+  const nav=document.getElementById('nav-s'+n);
+  if(btn) btn.classList.toggle('done',sessionState[n]);
+  if(nav) nav.classList.toggle('done',sessionState[n]);
+  updateProgress();
+}
+
+function updateProgress(){
+  const done=(sessionState[1]?1:0)+(sessionState[2]?1:0);
+  const pct=Math.round(done/2*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=pct+'%';
+}
+
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  el.parentElement.classList.toggle('checked-item');
+}
+
+function copyCode(btn){
+  const pre=btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    btn.textContent='copied!';
+    setTimeout(()=>btn.textContent='copy',1800);
+  });
+}
+
+function copyPlatform(btn){
+  const el=btn.nextElementSibling;
+  navigator.clipboard.writeText(el.innerText).then(()=>{
+    btn.textContent='copied!';
+    setTimeout(()=>btn.textContent='copy',1800);
+  });
+}
+
+window.addEventListener('scroll',()=>{
+  const ids=['fix','session1','session2'];
+  const navIds=['nav-fix','nav-s1','nav-s2'];
+  let current='';
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&window.scrollY>=el.offsetTop-80) current=id;
+  });
+  navIds.forEach((navId,i)=>{
+    const el=document.getElementById(navId);
+    if(el) el.classList.toggle('active',ids[i]===current);
+  });
+});
+</script>
+</body>
+</html>
