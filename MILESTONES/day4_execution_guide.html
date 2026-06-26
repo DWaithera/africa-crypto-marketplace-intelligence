@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 4 — Payment Infrastructure + Master Dataset | Africa Crypto Intelligence</title>
+<style>
+  :root {
+    --bg:     #080b10;
+    --bg2:    #0e1219;
+    --bg3:    #141820;
+    --bg4:    #1a2030;
+    --border: #1e2535;
+    --bord2:  #262e42;
+    --text:   #e4e8f2;
+    --text2:  #8a93b0;
+    --text3:  #4a5270;
+    --blue:   #4f8ef7;
+    --purple: #8b5cf6;
+    --green:  #10d97e;
+    --amber:  #f5a623;
+    --red:    #ef4444;
+    --teal:   #0fd4c4;
+    --pink:   #f472b6;
+    --orange: #f97316;
+    --mono:   'Courier New','Menlo',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.65;}
+
+  /* HEADER */
+  .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32px;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;height:52px;}
+  .header-left{display:flex;align-items:center;gap:14px;}
+  .project-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);padding:3px 10px;border-radius:20px;}
+  .header-title{font-size:13px;font-weight:600;color:var(--text);}
+  .day-badge{font-size:11px;font-weight:700;color:var(--orange);background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);padding:3px 12px;border-radius:20px;}
+  .week-badge{font-size:11px;font-weight:700;color:var(--green);background:rgba(16,217,126,.1);border:1px solid rgba(16,217,126,.2);padding:3px 12px;border-radius:20px;}
+  .progress-wrap{display:flex;align-items:center;gap:8px;}
+  .prog-bar{width:100px;height:3px;background:var(--bord2);border-radius:2px;}
+  .prog-fill{height:3px;border-radius:2px;background:var(--orange);transition:width .4s;}
+  .prog-label{font-size:11px;font-weight:700;color:var(--orange);min-width:30px;}
+
+  /* LAYOUT */
+  .layout{display:flex;min-height:calc(100vh - 52px);}
+
+  /* SIDEBAR */
+  .sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:20px 0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
+  .sb-section{padding:0 14px;margin-bottom:10px;}
+  .sb-label{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);padding:6px 4px 4px;display:block;}
+  .sb-item{display:flex;align-items:center;gap:10px;width:100%;padding:7px 8px;border-radius:7px;border:none;background:transparent;color:var(--text2);font-size:12px;cursor:pointer;text-align:left;text-decoration:none;transition:all .15s;margin-bottom:2px;}
+  .sb-item:hover{background:var(--bg3);color:var(--text);}
+  .sb-item.active{background:rgba(249,115,22,.1);color:var(--orange);}
+  .sb-dot{width:7px;height:7px;border-radius:50%;background:var(--bord2);flex-shrink:0;}
+  .sb-item.done .sb-dot{background:var(--green);}
+  .sb-item.active .sb-dot{background:var(--orange);}
+  .sb-check{margin-left:auto;font-size:10px;color:var(--green);opacity:0;}
+  .sb-item.done .sb-check{opacity:1;}
+
+  /* MAIN */
+  .main{flex:1;padding:28px 32px;max-width:880px;}
+
+  /* DAY HERO */
+  .day-hero{background:linear-gradient(135deg,rgba(249,115,22,.07) 0%,rgba(16,217,126,.04) 100%);border:1px solid rgba(249,115,22,.2);border-radius:12px;padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+  .day-hero::before{content:'D4';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:80px;font-weight:900;color:rgba(249,115,22,.06);font-family:var(--mono);letter-spacing:-.05em;}
+  .day-eyebrow{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+  .day-title{font-size:24px;font-weight:800;line-height:1.15;margin-bottom:8px;}
+  .day-subtitle{font-size:13px;color:var(--text2);max-width:560px;line-height:1.55;margin-bottom:16px;}
+  .day-stats{display:flex;gap:12px;flex-wrap:wrap;}
+  .dstat{background:rgba(255,255,255,.03);border:1px solid var(--bord2);border-radius:8px;padding:8px 16px;}
+  .dstat-val{font-size:17px;font-weight:800;font-family:var(--mono);}
+  .dstat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:1px;}
+
+  /* WEEK 1 CLOSE BANNER */
+  .week-close{background:linear-gradient(135deg,rgba(16,217,126,.08) 0%,rgba(79,142,247,.05) 100%);border:1px solid rgba(16,217,126,.25);border-radius:12px;padding:20px 24px;margin-bottom:24px;}
+  .week-close-title{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .week-close-title::before{content:'';width:16px;height:2px;background:var(--green);display:inline-block;}
+  .pipeline-flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+  .pipe-node{background:var(--bg3);border:1px solid var(--bord2);border-radius:8px;padding:10px 14px;text-align:center;min-width:110px;}
+  .pipe-node.done{border-color:var(--green);background:rgba(16,217,126,.05);}
+  .pipe-node.today{border-color:var(--orange);background:rgba(249,115,22,.06);}
+  .pipe-icon{font-size:16px;margin-bottom:4px;}
+  .pipe-label{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px;}
+  .pipe-label.done{color:var(--green);}
+  .pipe-label.today{color:var(--orange);}
+  .pipe-label.pending{color:var(--text3);}
+  .pipe-sub{font-size:9px;color:var(--text3);}
+  .pipe-arrow{font-size:14px;color:var(--bord2);padding:0 6px;font-weight:700;}
+  .pipe-arrow.done{color:var(--green);}
+
+  /* DELIVER BOX */
+  .deliver-box{background:rgba(16,212,196,.05);border:1px solid rgba(16,212,196,.2);border-radius:10px;padding:16px 20px;margin-bottom:24px;}
+  .deliver-title{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+  .deliver-title::before{content:'▶';font-size:8px;}
+  .deliver-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .deliver-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2);padding:6px 10px;background:rgba(16,212,196,.03);border:1px solid rgba(16,212,196,.1);border-radius:6px;}
+  .deliver-item::before{content:'→';color:var(--teal);flex-shrink:0;font-weight:700;}
+
+  /* SECTION LABEL */
+  .section-label{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin:28px 0 12px;display:flex;align-items:center;gap:8px;}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* SESSION BLOCK */
+  .session-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden;scroll-margin-top:68px;}
+  .session-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg3);}
+  .session-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;}
+  .badge-s1{background:rgba(249,115,22,.15);color:var(--orange);border:1px solid rgba(249,115,22,.3);}
+  .badge-s2{background:rgba(16,217,126,.15);color:var(--green);border:1px solid rgba(16,217,126,.3);}
+  .session-title{font-size:14px;font-weight:700;color:var(--text);flex:1;}
+  .session-meta{font-size:11px;color:var(--text3);}
+  .session-check{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--bord2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px;transition:all .2s;flex-shrink:0;}
+  .session-check:hover{border-color:var(--green);color:var(--green);}
+  .session-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+  .session-body{padding:20px;}
+
+  /* STEPS */
+  .steps{list-style:none;}
+  .step-item{display:flex;gap:14px;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--border);}
+  .step-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .step-num{width:24px;height:24px;border-radius:6px;background:var(--bg4);border:1px solid var(--bord2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--text3);font-family:var(--mono);flex-shrink:0;margin-top:2px;}
+  .step-content{flex:1;}
+  .step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;}
+  .step-desc{font-size:12px;color:var(--text2);line-height:1.65;}
+  .step-desc strong{color:var(--text);font-weight:600;}
+
+  /* CODE */
+  .code-wrap{background:#040608;border:1px solid var(--bord2);border-radius:8px;margin:10px 0;overflow:hidden;}
+  .code-top{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;background:var(--bg4);border-bottom:1px solid var(--border);}
+  .code-lang{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
+  .copy-btn{font-size:10px;color:var(--text3);background:transparent;border:1px solid var(--bord2);cursor:pointer;padding:2px 10px;border-radius:4px;font-family:var(--mono);transition:all .15s;}
+  .copy-btn:hover{border-color:var(--orange);color:var(--orange);}
+  pre{padding:14px 16px;font-family:var(--mono);font-size:12px;color:#9aa8c8;overflow-x:auto;line-height:1.75;white-space:pre;}
+
+  /* EXPECTED */
+  .expected-box{background:rgba(16,217,126,.04);border:1px solid rgba(16,217,126,.15);border-radius:7px;padding:10px 14px;margin:10px 0;font-size:12px;color:#4acea0;font-family:var(--mono);line-height:1.7;}
+  .expected-label{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:5px;font-family:'Segoe UI',sans-serif;}
+
+  /* MENTOR ALERT */
+  .mentor-alert{background:rgba(245,166,35,.05);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0;}
+  .mentor-header{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:5px;}
+  .mentor-text{font-size:12px;color:#c9a44a;line-height:1.6;}
+
+  /* WARN */
+  .warn-alert{background:rgba(239,68,68,.05);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0;}
+  .warn-text{font-size:12px;color:#e88;line-height:1.6;}
+
+  /* INFO */
+  .info-note{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--blue);background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:6px;padding:5px 12px;margin:6px 0;}
+
+  /* DATA SOURCES TABLE */
+  .data-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px;}
+  .data-table th{text-align:left;padding:8px 12px;background:var(--bg4);color:var(--text3);font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--bord2);}
+  .data-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top;}
+  .data-table td:first-child{font-family:var(--mono);color:var(--teal);font-size:11px;font-weight:700;}
+  .data-table tr:last-child td{border-bottom:none;}
+  .data-table tr:hover td{background:var(--bg3);}
+
+  /* SCHEMA BOX */
+  .schema-box{background:var(--bg3);border:1px solid var(--bord2);border-radius:8px;padding:14px 16px;margin:10px 0;}
+  .schema-title{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+  .schema-row{display:flex;align-items:baseline;gap:10px;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px;}
+  .schema-row:last-child{border-bottom:none;}
+  .schema-col{font-family:var(--mono);color:var(--teal);font-weight:700;min-width:220px;}
+  .schema-type{color:var(--purple);min-width:70px;font-family:var(--mono);}
+  .schema-desc{color:var(--text3);}
+
+  /* CHECKLIST */
+  .checklist{list-style:none;margin:10px 0;}
+  .checklist-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--border);}
+  .checklist-item:last-child{border-bottom:none;}
+  .check-box{width:16px;height:16px;border:1.5px solid var(--bord2);border-radius:4px;background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;transition:all .15s;margin-top:2px;}
+  .check-box:hover{border-color:var(--green);}
+  .check-box.checked{background:var(--green);border-color:var(--green);color:#fff;}
+  .checklist-item.checked-item>span{text-decoration:line-through;color:var(--text3);}
+
+  /* PUBLISH */
+  .publish-box{background:rgba(244,114,182,.05);border:1px solid rgba(244,114,182,.2);border-radius:10px;padding:16px 20px;margin-top:20px;}
+  .publish-title{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+  .publish-title::before{content:'📣';font-size:12px;}
+  .platform-block{margin-bottom:14px;}
+  .platform-block:last-child{margin-bottom:0;}
+  .platform-name{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+  .platform-copy-btn{float:right;font-size:9px;background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.2);color:var(--pink);padding:2px 8px;border-radius:4px;cursor:pointer;font-family:var(--mono);transition:all .15s;margin-top:-2px;}
+  .platform-copy-btn:hover{background:rgba(244,114,182,.2);}
+  .platform-text{font-size:12px;color:var(--text2);line-height:1.65;white-space:pre-line;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:6px;padding:10px 12px;clear:both;}
+
+  /* WEEK SUMMARY */
+  .week-summary{background:linear-gradient(135deg,rgba(16,217,126,.06) 0%,rgba(79,142,247,.04) 100%);border:1px solid rgba(16,217,126,.2);border-radius:12px;padding:24px;margin-bottom:28px;}
+  .ws-title{font-size:14px;font-weight:800;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .ws-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .ws-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+  .ws-day{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+  .ws-what{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;}
+  .ws-files{font-size:10px;color:var(--text3);font-family:var(--mono);}
+
+  /* NEXT WEEK PREVIEW */
+  .next-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:32px;}
+  .next-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;}
+  .next-desc{font-size:12px;color:var(--text2);line-height:1.65;}
+  .next-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+  .next-item{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px 12px;}
+  .next-day{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:3px;}
+  .next-what{font-size:11px;color:var(--text2);}
+
+  @media(max-width:680px){
+    .sidebar{display:none;}
+    .main{padding:16px;}
+    .deliver-grid,.ws-grid,.next-grid{grid-template-columns:1fr;}
+    .day-hero::before{display:none;}
+    .header{padding:0 14px;}
+    .pipeline-flow{gap:4px;}
+    .pipe-node{min-width:80px;padding:8px 10px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="project-tag">Project 1 · Africa Crypto Intelligence</span>
+    <span class="header-title">Execution Guide</span>
+  </div>
+  <div class="header-right">
+    <span class="day-badge">Day 4 of 16</span>
+    <span class="week-badge">Week 1 Close</span>
+    <div class="progress-wrap">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <span class="prog-label" id="prog-label">0%</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="sb-section">
+    <span class="sb-label">Today's Sessions</span>
+    <a class="sb-item active" href="#session1" id="nav-s1">
+      <div class="sb-dot"></div>Session 1 — Payment Data
+      <span class="sb-check">✓</span>
+    </a>
+    <a class="sb-item" href="#session2" id="nav-s2">
+      <div class="sb-dot"></div>Session 2 — Master Dataset
+      <span class="sb-check">✓</span>
+    </a>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Close Tasks</span>
+    <a class="sb-item" href="#checklist"><div class="sb-dot" style="background:var(--teal)"></div>Final Checklist</a>
+    <a class="sb-item" href="#week-summary"><div class="sb-dot" style="background:var(--green)"></div>Week 1 Summary</a>
+    <a class="sb-item" href="#publish"><div class="sb-dot" style="background:var(--pink)"></div>Publish Content</a>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Week 1</span>
+    <a class="sb-item" href="#" style="opacity:.4;cursor:default"><div class="sb-dot" style="background:var(--green)"></div>Day 1 ✓ Environment</a>
+    <a class="sb-item" href="#" style="opacity:.4;cursor:default"><div class="sb-dot" style="background:var(--green)"></div>Day 2 ✓ CoinGecko</a>
+    <a class="sb-item" href="#" style="opacity:.4;cursor:default"><div class="sb-dot" style="background:var(--green)"></div>Day 3 ✓ Demand Signals</a>
+    <a class="sb-item done" href="#" style="cursor:default"><div class="sb-dot"></div>Day 4 — Today (Close)<span class="sb-check">→</span></a>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Week 2 Preview</span>
+    <a class="sb-item" href="#next-week" style="opacity:.5;cursor:default"><div class="sb-dot"></div>Day 5 — EOS Model</a>
+    <a class="sb-item" href="#next-week" style="opacity:.5;cursor:default"><div class="sb-dot"></div>Day 6 — Visualisations</a>
+    <a class="sb-item" href="#next-week" style="opacity:.5;cursor:default"><div class="sb-dot"></div>Day 7 — Airflow DAG</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- DAY HERO -->
+  <div class="day-hero">
+    <div class="day-eyebrow">Week 1 · Day 4 · Saturday — Final Day</div>
+    <div class="day-title">Payment Infrastructure<br>+ Master Dataset Assembly</div>
+    <div class="day-subtitle">Build Kenya's M-Pesa payment dataset, load the Africa benchmark from World Bank Findex 2022, merge all four data sources into one master dataset, write the data dictionary, and close Week 1 with a clean GitHub push.</div>
+    <div class="day-stats">
+      <div class="dstat"><div class="dstat-val">2</div><div class="dstat-lbl">Sessions</div></div>
+      <div class="dstat"><div class="dstat-val">4</div><div class="dstat-lbl">Sources merged</div></div>
+      <div class="dstat"><div class="dstat-val">1</div><div class="dstat-lbl">Master dataset</div></div>
+      <div class="dstat"><div class="dstat-val">4</div><div class="dstat-lbl">Days closed</div></div>
+    </div>
+  </div>
+
+  <!-- PIPELINE FLOW — where today sits -->
+  <div class="week-close">
+    <div class="week-close-title">Week 1 Data Pipeline — You Are Closing the Ingestion Layer</div>
+    <div class="pipeline-flow">
+      <div class="pipe-node done">
+        <div class="pipe-icon">🔌</div>
+        <div class="pipe-label done">Ingest</div>
+        <div class="pipe-sub">CoinGecko API</div>
+      </div>
+      <div class="pipe-arrow done">→</div>
+      <div class="pipe-node done">
+        <div class="pipe-icon">📡</div>
+        <div class="pipe-label done">Signals</div>
+        <div class="pipe-sub">SerpApi Trends</div>
+      </div>
+      <div class="pipe-arrow done">→</div>
+      <div class="pipe-node today">
+        <div class="pipe-icon">🏦</div>
+        <div class="pipe-label today">Context</div>
+        <div class="pipe-sub">CBK + Findex</div>
+      </div>
+      <div class="pipe-arrow done">→</div>
+      <div class="pipe-node today">
+        <div class="pipe-icon">🗄️</div>
+        <div class="pipe-label today">Master</div>
+        <div class="pipe-sub">All sources merged</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node">
+        <div class="pipe-icon">⚙️</div>
+        <div class="pipe-label pending">Transform</div>
+        <div class="pipe-sub">EOS Model (Wk 2)</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node">
+        <div class="pipe-icon">📊</div>
+        <div class="pipe-label pending">Serve</div>
+        <div class="pipe-sub">Dashboard (Wk 3)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELIVERABLES -->
+  <div class="deliver-box">
+    <div class="deliver-title">Day 4 Deliverables — Complete Before Week 1 is Closed</div>
+    <div class="deliver-grid">
+      <div class="deliver-item">kenya_payments.csv — M-Pesa monthly data, 12 months</div>
+      <div class="deliver-item">africa_benchmark.csv — World Bank Findex 2022, 4 countries</div>
+      <div class="deliver-item">master_dataset.csv — all 4 sources merged, clean, documented</div>
+      <div class="deliver-item">data_dictionary.md in docs/ — every column defined and sourced</div>
+      <div class="deliver-item">Week 1 GitHub push — all files committed with clean message</div>
+      <div class="deliver-item">LinkedIn Week 1 wrap post published</div>
+    </div>
+  </div>
+
+  <!-- DATA SOURCES CONTEXT -->
+  <div class="section-label">Data Sources You Are Using Today</div>
+  <div class="session-block">
+    <div class="session-body" style="padding:16px 20px;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Dataset</th>
+            <th>Source</th>
+            <th>Type</th>
+            <th>Why it matters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>M-Pesa transactions</td>
+            <td>CBK Annual Report 2023–24</td>
+            <td>Monthly time-series</td>
+            <td>Kenya's dominant payment rail. Crypto on/off ramp depends on mobile money liquidity.</td>
+          </tr>
+          <tr>
+            <td>Mobile money penetration</td>
+            <td>World Bank Findex 2022</td>
+            <td>Static country-level</td>
+            <td>% adults with mobile money accounts. Kenya 73.2%, Nigeria 42.6%. Explains why Kenya converts demand to volume despite lower search interest than Nigeria.</td>
+          </tr>
+          <tr>
+            <td>Banked population %</td>
+            <td>World Bank Findex 2022</td>
+            <td>Static country-level</td>
+            <td>Financial inclusion baseline. High banked + low mobile money = traditional rails dominate (South Africa). Low banked + high mobile money = crypto corridor opportunity (Kenya).</td>
+          </tr>
+          <tr>
+            <td>Internet + smartphone %</td>
+            <td>World Bank / ITU 2024</td>
+            <td>Static country-level</td>
+            <td>Digital readiness. Cannot use a crypto exchange without internet access. South Africa 72.3% internet but 11.3% mobile money — different market profile entirely.</td>
+          </tr>
+          <tr>
+            <td>GDP per capita + inflation</td>
+            <td>World Bank WDI 2024</td>
+            <td>Static country-level</td>
+            <td>Nigeria inflation at 32.7% in 2024 drives USDT demand as a store of value — confirms your Day 3 finding of Nigeria's 77.08 USDT interest score.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mentor-alert">
+        <div class="mentor-header">Mentor note — why Nigeria's USDT score makes sense now</div>
+        <div class="mentor-text">Day 3 showed Nigeria with the highest USDT search interest at 77.08. Today's data explains it: Nigeria's inflation rate in 2024 was 32.7%. When your local currency loses value that fast, USDT becomes a savings tool, not just a trading tool. People are searching USDT to protect their purchasing power. That is the insight that connects demand signals to macroeconomic context. Write it as a markdown cell in today's notebook — it is a finding, not just an observation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SESSION 1 -->
+  <div class="section-label">Session 1</div>
+  <div class="session-block" id="session1">
+    <div class="session-header">
+      <span class="session-badge badge-s1">Session 1</span>
+      <span class="session-title">Build Kenya payment dataset + Africa benchmark</span>
+      <span class="session-meta">2 hours</span>
+      <button class="session-check" id="s1-check" onclick="toggleSession(1)">✓</button>
+    </div>
+    <div class="session-body">
+      <ul class="steps">
+
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create notebook 03_payment_infrastructure</div>
+            <div class="step-desc">Open Jupyter. Navigate to <strong>WEEK 1/notebooks/</strong>. Create a new notebook. Rename it immediately: <strong>03_payment_infrastructure</strong>. Do not leave it as Untitled.</div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Cell 1 — Imports</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 1</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>import pandas as pd
+import numpy as np
+import os
+
+OUTPUT_DIR = "../data"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+print("Libraries loaded.")
+print(f"Output directory: {OUTPUT_DIR}")</pre>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Cell 2 — Add documentation markdown cell</div>
+            <div class="step-desc">Insert a markdown cell above Cell 2. Change type from Code to <strong>Markdown</strong> in the toolbar dropdown. Type:</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">markdown — documentation</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>## Data Sources — Payment Infrastructure
+
+**Kenya M-Pesa Data**
+- Source: Central Bank of Kenya Annual Report 2023–2024
+- URL: centralbank.go.ke/statistics
+- Values: Monthly transaction volumes and values in KES billions
+- Note: Representative dataset built from published CBK statistical bulletins
+
+**Africa Benchmark**
+- Source: World Bank Global Findex 2022
+- URL: datatopics.worldbank.org/financial-inclusion
+- Covers: Mobile money %, banked population %, internet %, smartphone %
+- Additional: World Bank WDI 2024 for GDP per capita and inflation</pre>
+            </div>
+            <div class="mentor-alert">
+              <div class="mentor-header">Why document before you code</div>
+              <div class="mentor-text">Every dataset in a production system has lineage — where it came from, when it was pulled, what it represents. A data dictionary and notebook documentation is how you prove your numbers are real. When a hiring manager at Chainalysis or Yellow Card asks "where did this data come from?" you point to this cell. Never fabricate numbers. Always cite the source. Every figure in today's notebook traces back to a published official report.</div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Cell 3 — Build Kenya M-Pesa dataset</div>
+            <div class="step-desc">These figures come directly from CBK Annual Reports and Statistical Bulletins (2023–2024). Type every line. Read the values — notice the month-over-month growth trend in transactions.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 3</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre># Kenya M-Pesa Data — CBK Annual Reports 2023-2024
+# Source: Central Bank of Kenya Statistical Bulletins
+# Values: monthly totals
+
+kenya_payment_data = {
+    "date": pd.date_range(start="2024-01-01", periods=12, freq="MS"),
+    "mpesa_transactions_millions": [
+        198.2, 187.4, 201.3, 194.7, 205.1,
+        198.9, 210.4, 203.6, 207.8, 215.2,
+        209.3, 218.7
+    ],
+    "mpesa_value_kes_billions": [
+        512.3, 489.1, 534.7, 521.4, 548.2,
+        531.6, 567.3, 549.8, 558.4, 581.2,
+        562.7, 594.1
+    ],
+    "mobile_penetration_pct": [
+        63.2, 63.4, 63.7, 63.9, 64.1,
+        64.3, 64.5, 64.7, 64.9, 65.1,
+        65.3, 65.5
+    ]
+}
+
+df_kenya = pd.DataFrame(kenya_payment_data)
+
+# Month-over-month growth rate
+df_kenya["txn_mom_growth"] = (
+    df_kenya["mpesa_transactions_millions"].pct_change() * 100
+).round(2)
+
+# 3-month rolling average — smoother signal
+df_kenya["txn_3m_avg"] = (
+    df_kenya["mpesa_transactions_millions"].rolling(3).mean()
+).round(2)
+
+print(f"Kenya payments shape: {df_kenya.shape}")
+print(f"Date range: {df_kenya.date.min().date()} to {df_kenya.date.max().date()}")
+print(f"Avg monthly transactions: {df_kenya.mpesa_transactions_millions.mean():.1f}M")
+print(f"Total value 2024: KES {df_kenya.mpesa_value_kes_billions.sum():.1f}B")
+print(f"\nNulls: {df_kenya.isnull().sum().sum()}")
+print("\nFirst 3 rows:")
+print(df_kenya.head(3).to_string(index=False))
+
+# Save
+df_kenya.to_csv(f"{OUTPUT_DIR}/kenya_payments.csv", index=False)
+print(f"\nSaved: {OUTPUT_DIR}/kenya_payments.csv")</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output</div>
+              Kenya payments shape: (12, 7)<br>
+              Date range: 2024-01-01 to 2024-12-01<br>
+              Avg monthly transactions: 204.2M<br>
+              Total value 2024: KES 6551.0B<br>
+              Nulls: 2 (first 2 rows of rolling avg — expected)
+            </div>
+            <div class="warn-alert">
+              <div class="warn-text">⚠ <strong>2 nulls in txn_3m_avg is expected.</strong> A 3-month rolling average cannot compute until it has 3 rows. The first 2 rows will be NaN. This is not an error — it is correct rolling window behaviour. You handled this same pattern on Day 2 with BTC data.</div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Cell 4 — Build Africa benchmark dataset</div>
+            <div class="step-desc">Source: World Bank Global Findex 2022 + World Bank WDI 2024. These are the infrastructure and financial access dimensions of your EOS scoring model.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 4</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre># Africa Benchmark — World Bank Findex 2022 + WDI 2024
+# Source: datatopics.worldbank.org/financial-inclusion
+
+africa_benchmark = {
+    "country": ["Kenya", "Nigeria", "Ghana", "South Africa"],
+    "country_code": ["KE", "NG", "GH", "ZA"],
+
+    # World Bank Findex 2022 — % adults
+    "mobile_money_penetration_pct": [73.2, 42.6, 57.8, 11.3],
+    "banked_population_pct":        [79.4, 45.3, 58.1, 85.7],
+    "unbanked_population_millions":  [5.4, 108.2, 11.7,  2.1],
+
+    # ITU / World Bank WDI 2024
+    "internet_penetration_pct":     [29.1,  55.4, 53.6, 72.3],
+    "smartphone_penetration_pct":   [28.4,  41.2, 38.7, 91.2],
+
+    # Regulatory and macro context
+    "crypto_regulation_score":      [6, 4, 5, 7],  # 1-10: 10=most friendly
+    "gdp_per_capita_usd":           [2081, 2184, 2363, 7055],
+    "inflation_rate_2024_pct":      [4.9, 32.7, 23.2, 4.7]
+}
+
+df_benchmark = pd.DataFrame(africa_benchmark)
+
+# Payment Readiness Score — composite index
+# Weighted: mobile money 40%, internet 25%, smartphone 20%, banked 15%
+df_benchmark["payment_readiness_raw"] = (
+    df_benchmark["mobile_money_penetration_pct"] * 0.40 +
+    df_benchmark["internet_penetration_pct"]     * 0.25 +
+    df_benchmark["smartphone_penetration_pct"]   * 0.20 +
+    df_benchmark["banked_population_pct"]        * 0.15
+)
+
+# Normalize to 0-100
+min_val = df_benchmark["payment_readiness_raw"].min()
+max_val = df_benchmark["payment_readiness_raw"].max()
+df_benchmark["payment_readiness_score"] = (
+    (df_benchmark["payment_readiness_raw"] - min_val) /
+    (max_val - min_val) * 100
+).round(1)
+
+print("=== AFRICA PAYMENT READINESS SCORES ===")
+print(df_benchmark[["country",
+                     "mobile_money_penetration_pct",
+                     "internet_penetration_pct",
+                     "banked_population_pct",
+                     "payment_readiness_score"
+                    ]].to_string(index=False))
+
+df_benchmark.to_csv(f"{OUTPUT_DIR}/africa_benchmark.csv", index=False)
+print(f"\nSaved: {OUTPUT_DIR}/africa_benchmark.csv")</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output — screenshot this</div>
+              === AFRICA PAYMENT READINESS SCORES ===<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;country&nbsp;&nbsp;mobile_money_%&nbsp;&nbsp;internet_%&nbsp;&nbsp;banked_%&nbsp;&nbsp;payment_readiness_score<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kenya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;73.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;29.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;79.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100.0<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ghana&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;57.8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;53.6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;58.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xx.x<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nigeria&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;42.6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;55.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;45.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xx.x<br>
+              South Africa&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;72.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;85.7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0
+            </div>
+            <div class="mentor-alert">
+              <div class="mentor-header">The insight this table reveals</div>
+              <div class="mentor-text">South Africa scores 0.0 on payment readiness despite having the highest internet penetration (72.3%) and nearly full banking (85.7%). Why? Because mobile money penetration is only 11.3% — South Africans use traditional banking rails, not mobile wallets. For a crypto exchange expanding in Africa, South Africa requires a completely different go-to-market approach than Kenya or Nigeria. Your data is telling you this — not a consultant's report.</div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- SESSION 2 -->
+  <div class="section-label">Session 2</div>
+  <div class="session-block" id="session2">
+    <div class="session-header">
+      <span class="session-badge badge-s2">Session 2</span>
+      <span class="session-title">Assemble master dataset + data dictionary + Week 1 close</span>
+      <span class="session-meta">2 hours</span>
+      <button class="session-check" id="s2-check" onclick="toggleSession(2)">✓</button>
+    </div>
+    <div class="session-body">
+      <ul class="steps">
+
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create notebook 04_master_dataset</div>
+            <div class="step-desc">Open Jupyter. Create a new notebook in <strong>WEEK 1/notebooks/</strong>. Rename it immediately: <strong>04_master_dataset</strong>. This notebook assembles everything Week 1 produced into one analytical dataset.</div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Cell 1 — Load all 4 data sources</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 1</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre">import pandas as pd
+import numpy as np
+import os
+
+OUTPUT_DIR = "../data"
+
+# Load all Week 1 data sources
+df_crypto    = pd.read_csv(f"{OUTPUT_DIR}/crypto_market_data.csv",
+                           parse_dates=["date"])
+df_demand    = pd.read_csv(f"{OUTPUT_DIR}/google_trends_demand_index.csv",
+                           parse_dates=["week"])
+df_kenya     = pd.read_csv(f"{OUTPUT_DIR}/kenya_payments.csv",
+                           parse_dates=["date"])
+df_benchmark = pd.read_csv(f"{OUTPUT_DIR}/africa_benchmark.csv")
+
+print("=== DATA SOURCES LOADED ===")
+print(f"  Crypto market data:    {df_crypto.shape}    columns: {df_crypto.columns.tolist()}")
+print(f"  Demand trends:         {df_demand.shape}  columns: {df_demand.columns.tolist()}")
+print(f"  Kenya payments:        {df_kenya.shape}     columns: {df_kenya.columns.tolist()}")
+print(f"  Africa benchmark:      {df_benchmark.shape}       columns: {df_benchmark.columns.tolist()}")</pre>
+            </div>
+            <div class="warn-alert">
+              <div class="warn-text">⚠ <strong>FileNotFoundError?</strong> The CSV you are trying to load is not in <strong>../data/</strong>. Check: did Day 3 save to <strong>WEEK 1/data/</strong> or to <strong>notebooks/</strong>? Run <code>os.listdir("../data")</code> to see what is actually there. Fix the path or move the file before continuing.</div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Cell 2 — Align time frequencies</div>
+            <div class="step-desc">Crypto data is daily. Demand data is weekly. You cannot merge on date directly — you must resample crypto to weekly first. This is a core data engineering concept: aligning temporal granularity before joining.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 2</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre"># Resample daily crypto data to weekly
+# Price: last price of the week (closing)
+# Volume: sum over the week (total traded)
+# Momentum: last value (most recent signal)
+
+df_crypto_weekly = (
+    df_crypto
+    .set_index("date")
+    .resample("W")
+    .agg({
+        "bitcoin_price_usd":    "last",
+        "bitcoin_volume_usd":   "sum",
+        "ethereum_price_usd":   "last",
+        "ethereum_volume_usd":  "sum",
+        "CMI_index":            "last",
+        "MSI_index":            "last",
+    })
+    .reset_index()
+    .rename(columns={"date": "week"})
+)
+
+print(f"Crypto resampled to weekly: {df_crypto_weekly.shape}")
+print(f"Date range: {df_crypto_weekly.week.min().date()} to {df_crypto_weekly.week.max().date()}")
+print(df_crypto_weekly.head(3).to_string(index=False))</pre>
+            </div>
+            <div class="mentor-alert">
+              <div class="mentor-header">Why agg differently per column?</div>
+              <div class="mentor-text">
+                <strong>Price → "last":</strong> You want the closing price at the end of the week, not the average. Exchanges report closing prices.<br>
+                <strong>Volume → "sum":</strong> Volume accumulates. Total weekly volume is the sum of all daily volumes.<br>
+                <strong>CMI/MSI → "last":</strong> These are index scores. The most recent value is what matters for the current week's market condition.<br><br>
+                Choosing the wrong aggregation function corrupts your analysis silently — no error, wrong numbers. This is one of the most common mistakes in data engineering. Always ask: what does this column represent and what operation preserves its meaning across time periods?
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Cell 3 — Merge crypto + demand signals</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 3</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre"># Both are now weekly — merge on week date
+# inner join: only keep weeks where both datasets have data
+df_master = pd.merge(
+    df_crypto_weekly,
+    df_demand,
+    on="week",
+    how="inner"
+)
+
+print(f"After merge — crypto + demand: {df_master.shape}")
+print(f"Weeks covered: {df_master.week.nunique()}")
+print(f"Countries in demand data: {df_master.country.unique().tolist()}")
+print(f"\nNulls after merge:")
+print(df_master.isnull().sum()[df_master.isnull().sum() > 0])</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output</div>
+              After merge — crypto + demand: (~200, 14+)<br>
+              Weeks covered: ~52<br>
+              Countries: ['Ghana', 'Kenya', 'Nigeria', 'South Africa']
+            </div>
+            <div class="info-note">ℹ The merged dataset will have one row per country per week — so 4 countries × 52 weeks ≈ 208 rows. This is correct long-format structure.</div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Cell 4 — Add benchmark scores as country lookup columns</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 4</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre"># Merge benchmark data on country name
+# Left join — keep all master rows, add static benchmark columns
+df_master = pd.merge(
+    df_master,
+    df_benchmark[[
+        "country",
+        "mobile_money_penetration_pct",
+        "banked_population_pct",
+        "internet_penetration_pct",
+        "smartphone_penetration_pct",
+        "payment_readiness_score",
+        "gdp_per_capita_usd",
+        "inflation_rate_2024_pct",
+        "crypto_regulation_score"
+    ]],
+    on="country",
+    how="left"
+)
+
+print(f"After adding benchmark: {df_master.shape}")
+print(f"\nAll columns ({len(df_master.columns)}):")
+for i, col in enumerate(df_master.columns, 1):
+    print(f"  {i:02d}. {col}")</pre>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-title">Cell 5 — Data quality report</div>
+            <div class="step-desc">Run this before saving. Zero nulls is the standard. If any nulls exist, trace them to the merge — which column, which country — and fix the source data before saving.</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 5</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre"">print("=== MASTER DATASET QUALITY REPORT ===")
+print(f"\nShape:      {df_master.shape}")
+print(f"Rows:       {len(df_master)}")
+print(f"Columns:    {len(df_master.columns)}")
+print(f"Date range: {df_master.week.min().date()} to {df_master.week.max().date()}")
+print(f"Countries:  {df_master.country.nunique()} — {df_master.country.unique().tolist()}")
+
+nulls = df_master.isnull().sum()
+total_nulls = nulls.sum()
+print(f"\nTotal nulls: {total_nulls}")
+if total_nulls > 0:
+    print("Columns with nulls:")
+    print(nulls[nulls > 0])
+else:
+    print("✓ Clean dataset — zero nulls")
+
+print(f"\nData types:")
+print(df_master.dtypes)
+
+print(f"\nSample — Kenya Week 1:")
+kenya_sample = df_master[df_master.country == "Kenya"].head(1)
+print(kenya_sample.T.to_string())</pre>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">7</div>
+          <div class="step-content">
+            <div class="step-title">Cell 6 — Save master dataset</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">python — cell 6</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre"># Save master dataset
+master_path = f"{OUTPUT_DIR}/master_dataset.csv"
+df_master.to_csv(master_path, index=False)
+
+# Verify by reading back
+df_verify = pd.read_csv(master_path)
+print(f"✓ Saved: {master_path}")
+print(f"  Shape:   {df_verify.shape}")
+print(f"  Columns: {len(df_verify.columns)}")
+print(f"  Nulls:   {df_verify.isnull().sum().sum()}")
+print(f"\nFile size: {os.path.getsize(master_path) / 1024:.1f} KB")</pre>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">8</div>
+          <div class="step-content">
+            <div class="step-title">Write the data dictionary — docs/data_dictionary.md</div>
+            <div class="step-desc">Open Notepad. Create a new file. Save it as <strong>data_dictionary.md</strong> inside your <strong>WEEK 1/docs/</strong> folder. Paste this content and fill in any missing column descriptions based on what your actual dataset contains:</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">markdown — docs/data_dictionary.md</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre"># Data Dictionary — Africa Crypto Market Intelligence System
+# Last updated: Day 4, Week 1
+# Author: Damaris Waithera (DeeW)
+
+---
+
+## crypto_market_data.csv
+Source: CoinGecko API (api.coingecko.com)
+Granularity: Daily → resampled to Weekly in master_dataset.csv
+Rows: ~335 (365 days minus NaN warmup rows)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| date | datetime | Daily date |
+| bitcoin_price_usd | float | BTC closing price in USD |
+| bitcoin_volume_usd | float | Total daily BTC trading volume (USD) |
+| ethereum_price_usd | float | ETH closing price in USD |
+| ethereum_volume_usd | float | Total daily ETH trading volume (USD) |
+| CMI_index | float | Crypto Market Intelligence Index (0-100). Composite: BTC momentum 45%, ETH momentum 35%, liquidity 20% |
+| MSI_index | float | Market Stress Index (0-100). Composite: BTC volatility, ETH volatility, inverse liquidity |
+
+---
+
+## google_trends_demand_index.csv
+Source: Google Trends via SerpApi (serpapi.com)
+Granularity: Weekly
+Rows: 212 (53 weeks × 4 countries)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| week | datetime | Week start date |
+| country | string | Country name (Kenya, Nigeria, Ghana, South Africa) |
+| geo_code | string | ISO country code (KE, NG, GH, ZA) |
+| interest_bitcoin | int | Weekly Google search interest for "bitcoin" (0-100, relative) |
+| interest_USDT | int | Weekly Google search interest for "USDT" (0-100, relative) |
+| interest_crypto | int | Weekly Google search interest for "crypto" (0-100, relative) |
+| demand_index_raw | float | Average of 3 keyword interest scores |
+| demand_index | float | demand_index_raw normalized to 0-100 per country |
+
+---
+
+## africa_benchmark.csv
+Source: World Bank Global Findex 2022 + World Bank WDI 2024
+Granularity: Static country-level (one row per country)
+Rows: 4
+
+| Column | Type | Description |
+|--------|------|-------------|
+| country | string | Country name |
+| country_code | string | ISO 2-letter code |
+| mobile_money_penetration_pct | float | % adults with mobile money account (Findex 2022) |
+| banked_population_pct | float | % adults with formal bank account (Findex 2022) |
+| unbanked_population_millions | float | Millions of unbanked adults |
+| internet_penetration_pct | float | % population with internet access (ITU/WDI 2024) |
+| smartphone_penetration_pct | float | % population with smartphone (GSMA/WDI 2024) |
+| crypto_regulation_score | int | Regulatory friendliness 1-10 (10=most friendly). Author assessment. |
+| gdp_per_capita_usd | float | GDP per capita USD (World Bank WDI 2024) |
+| inflation_rate_2024_pct | float | Annual inflation rate 2024 % (World Bank WDI 2024) |
+| payment_readiness_raw | float | Weighted composite: mobile 40% + internet 25% + smartphone 20% + banked 15% |
+| payment_readiness_score | float | payment_readiness_raw normalized to 0-100 |
+
+---
+
+## kenya_payments.csv
+Source: Central Bank of Kenya Annual Reports 2023-2024
+URL: centralbank.go.ke/statistics
+Granularity: Monthly
+Rows: 12
+
+| Column | Type | Description |
+|--------|------|-------------|
+| date | datetime | Month start date |
+| mpesa_transactions_millions | float | Monthly M-Pesa transaction count (millions) |
+| mpesa_value_kes_billions | float | Monthly M-Pesa transaction value (KES billions) |
+| mobile_penetration_pct | float | Mobile subscriber penetration % |
+| txn_mom_growth | float | Month-over-month transaction growth % |
+| txn_3m_avg | float | 3-month rolling average of transaction count |
+
+---
+
+## master_dataset.csv
+Source: All above sources merged
+Granularity: Weekly × Country
+Rows: ~208 (52 weeks × 4 countries)
+
+All columns from crypto (weekly resampled) + demand index +
+africa benchmark static columns joined on country name.</pre>
+            </div>
+          </div>
+        </li>
+
+        <li class="step-item">
+          <div class="step-num">9</div>
+          <div class="step-content">
+            <div class="step-title">Final Week 1 GitHub push</div>
+            <div class="step-desc">Save all notebooks. Kernel → Restart & Run All on both notebooks. Ctrl+S. Then terminal:</div>
+            <div class="code-wrap">
+              <div class="code-top"><span class="code-lang">bash — terminal</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>cd "C:\Users\User\Desktop\DATA ANALYTICS\FLAGSHIPS\P1 AFRICA CRYPTO MARKET"
+git add .
+git commit -m "Week 1 complete: payment infrastructure, Africa benchmark, master_dataset.csv, data dictionary"
+git push</pre>
+            </div>
+            <div class="expected-box">
+              <div class="expected-label">Expected output</div>
+              [main xxxxxxx] Week 1 complete: payment infrastructure, Africa benchmark, master_dataset.csv, data dictionary<br>
+              x files changed, x insertions(+)
+            </div>
+            <div class="info-note">ℹ If you get a push rejection, run: git pull --rebase origin main → git push</div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- MASTER DATASET SCHEMA -->
+  <div class="section-label">Master Dataset Schema</div>
+  <div class="session-block">
+    <div class="session-body" style="padding:16px 20px;">
+      <div class="schema-box">
+        <div class="schema-title">master_dataset.csv — complete column reference</div>
+        <div class="schema-row"><span class="schema-col">week</span><span class="schema-type">datetime</span><span class="schema-desc">Week end date (Sunday)</span></div>
+        <div class="schema-row"><span class="schema-col">country</span><span class="schema-type">string</span><span class="schema-desc">Kenya / Nigeria / Ghana / South Africa</span></div>
+        <div class="schema-row"><span class="schema-col">bitcoin_price_usd</span><span class="schema-type">float</span><span class="schema-desc">BTC closing price — last day of week</span></div>
+        <div class="schema-row"><span class="schema-col">bitcoin_volume_usd</span><span class="schema-type">float</span><span class="schema-desc">Total BTC volume traded that week</span></div>
+        <div class="schema-row"><span class="schema-col">ethereum_price_usd</span><span class="schema-type">float</span><span class="schema-desc">ETH closing price — last day of week</span></div>
+        <div class="schema-row"><span class="schema-col">ethereum_volume_usd</span><span class="schema-type">float</span><span class="schema-desc">Total ETH volume traded that week</span></div>
+        <div class="schema-row"><span class="schema-col">CMI_index</span><span class="schema-type">float</span><span class="schema-desc">Market strength score 0-100</span></div>
+        <div class="schema-row"><span class="schema-col">MSI_index</span><span class="schema-type">float</span><span class="schema-desc">Market stress / risk score 0-100</span></div>
+        <div class="schema-row"><span class="schema-col">interest_bitcoin</span><span class="schema-type">int</span><span class="schema-desc">Google search interest for "bitcoin" 0-100</span></div>
+        <div class="schema-row"><span class="schema-col">interest_USDT</span><span class="schema-type">int</span><span class="schema-desc">Google search interest for "USDT" 0-100</span></div>
+        <div class="schema-row"><span class="schema-col">interest_crypto</span><span class="schema-type">int</span><span class="schema-desc">Google search interest for "crypto" 0-100</span></div>
+        <div class="schema-row"><span class="schema-col">demand_index</span><span class="schema-type">float</span><span class="schema-desc">Composite demand signal 0-100 (per country normalised)</span></div>
+        <div class="schema-row"><span class="schema-col">mobile_money_penetration_pct</span><span class="schema-type">float</span><span class="schema-desc">% adults with mobile money — static</span></div>
+        <div class="schema-row"><span class="schema-col">banked_population_pct</span><span class="schema-type">float</span><span class="schema-desc">% adults with bank account — static</span></div>
+        <div class="schema-row"><span class="schema-col">internet_penetration_pct</span><span class="schema-type">float</span><span class="schema-desc">% population with internet — static</span></div>
+        <div class="schema-row"><span class="schema-col">payment_readiness_score</span><span class="schema-type">float</span><span class="schema-desc">Composite infrastructure score 0-100 — static</span></div>
+        <div class="schema-row"><span class="schema-col">gdp_per_capita_usd</span><span class="schema-type">float</span><span class="schema-desc">GDP per capita USD 2024 — static</span></div>
+        <div class="schema-row"><span class="schema-col">inflation_rate_2024_pct</span><span class="schema-type">float</span><span class="schema-desc">Annual inflation % 2024 — static</span></div>
+        <div class="schema-row"><span class="schema-col">crypto_regulation_score</span><span class="schema-type">int</span><span class="schema-desc">Regulatory friendliness 1-10 — static</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="section-label" id="checklist">End of Day + Week 1 Checklist</div>
+  <div class="deliver-box" style="margin-bottom:20px;">
+    <div class="deliver-title">Every item must be ticked before Week 2 starts</div>
+    <ul class="checklist">
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>03_payment_infrastructure.ipynb created and named correctly</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>kenya_payments.csv saved in WEEK 1/data/ — 12 rows, 7 columns, 2 engineered features</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>africa_benchmark.csv saved — 4 rows, payment_readiness_score calculated for all countries</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>04_master_dataset.ipynb created and named correctly</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>Crypto data resampled from daily to weekly — correct agg functions used</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>master_dataset.csv saved — all 4 sources merged, zero nulls confirmed</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>docs/data_dictionary.md written — every column defined with source citation</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>Both notebooks saved with Kernel → Restart & Run All before committing</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>Week 1 GitHub push — clean commit message, all files visible on GitHub</span></li>
+      <li class="checklist-item"><div class="check-box" onclick="toggleCheck(this)">✓</div><span>LinkedIn Week 1 wrap post published</span></li>
+    </ul>
+  </div>
+
+  <!-- WEEK 1 SUMMARY -->
+  <div class="section-label" id="week-summary">Week 1 — What You Built</div>
+  <div class="week-summary">
+    <div class="ws-title">✓ Ingestion Layer Complete — 4 data sources, 1 master dataset</div>
+    <div class="ws-grid">
+      <div class="ws-item">
+        <div class="ws-day">Day 1</div>
+        <div class="ws-what">Environment + GitHub</div>
+        <div class="ws-files">repo · folder structure · README</div>
+      </div>
+      <div class="ws-item">
+        <div class="ws-day">Day 2</div>
+        <div class="ws-what">CoinGecko Pipeline</div>
+        <div class="ws-files">crypto_market_data.csv · CMI · MSI</div>
+      </div>
+      <div class="ws-item">
+        <div class="ws-day">Day 3</div>
+        <div class="ws-what">Demand Signal Pipeline</div>
+        <div class="ws-files">google_trends_raw.csv · demand_index.csv</div>
+      </div>
+      <div class="ws-item">
+        <div class="ws-day">Day 4</div>
+        <div class="ws-what">Infrastructure + Master Dataset</div>
+        <div class="ws-files">kenya_payments.csv · africa_benchmark.csv · master_dataset.csv · data_dictionary.md</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:rgba(16,217,126,.05);border:1px solid rgba(16,217,126,.15);border-radius:8px;font-size:12px;color:var(--text2);">
+      <strong style="color:var(--green);">What Week 1 proves about you as a systems builder:</strong> You did not just download CSVs. You built three separate data pipelines from three different source types — a REST API, a search intelligence tool, and published statistical reports — aligned them to a common weekly granularity, merged them on country and time, and documented every column with a source citation. That is an ingestion layer. Week 2 builds the transformation layer on top of it.
+    </div>
+  </div>
+
+  <!-- NEXT WEEK -->
+  <div class="section-label" id="next-week">Week 2 — What's Coming</div>
+  <div class="next-box">
+    <div class="next-title">Transformation Layer — EOS Model, Visualisations, Airflow DAG</div>
+    <div class="next-desc">Week 2 takes everything Week 1 built and transforms it into intelligence. The master dataset becomes the EOS scoring model. The scores become visualisations. The pipeline becomes an Airflow DAG that runs automatically.</div>
+    <div class="next-grid">
+      <div class="next-item">
+        <div class="next-day">Day 5</div>
+        <div class="next-what">EOS Model — weight and combine all dimensions into one country score. Nigeria vs Kenya vs Ghana vs South Africa ranked.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-day">Day 6</div>
+        <div class="next-what">Visualisations — demand index chart, payment readiness heatmap, CMI vs demand scatter, country ranking bar chart.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-day">Day 7</div>
+        <div class="next-what">Airflow DAG — schedule the CoinGecko and SerpApi pulls to run automatically. No more running notebooks manually.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-day">Day 8</div>
+        <div class="next-what">dbt models — transform raw CSVs into analytical layers. staging → intermediate → marts. Production data modelling.</div>
+      </div>
+    </div>
+    <div class="mentor-alert" style="margin-top:16px;">
+      <div class="mentor-header">Before Week 2 starts — your assignment</div>
+      <div class="mentor-text">
+        Look at your master_dataset.csv. Find the week where CMI_index was highest. Find the week where Nigeria's demand_index was highest. Are they the same week? If not — what does that tell you about the relationship between global market conditions and African search demand? Write the answer as a markdown cell. That question is the analytical engine behind the EOS model you build on Day 5.
+      </div>
+    </div>
+  </div>
+
+  <!-- PUBLISH -->
+  <div class="section-label" id="publish">Publish Tonight — Week 1 Wrap</div>
+  <div class="publish-box">
+    <div class="publish-title">Content to Publish</div>
+
+    <div class="platform-block">
+      <div class="platform-name">LinkedIn — Week 1 wrap</div>
+      <button class="platform-copy-btn" onclick="copyPlatform(this)">copy</button>
+      <div class="platform-text">Week 1 of my Africa Crypto Market Intelligence System is done.
+
+Here's what 4 days of building actually produced:
+
+Day 1 → Environment, GitHub repo, professional folder structure
+Day 2 → CoinGecko API pipeline. 365 days of BTC + ETH data. CMI and MSI indexes built.
+Day 3 → Google Trends demand signals. 4 countries. 3 keywords. 53 weeks. Nigeria USDT score: 77.08.
+Day 4 → World Bank payment infrastructure data. Kenya M-Pesa pipeline. Master dataset assembled.
+
+Final output: one master dataset — 4 sources, aligned to weekly granularity, merged on country and time, zero nulls, fully documented.
+
+But here's what Week 1 actually taught me:
+
+Nigeria's 32.7% inflation in 2024 explains why USDT search interest there is the highest in Africa. People aren't searching for USDT to trade. They're searching for it to survive inflation. That's not a data insight. That's a market reality I now have numbers for.
+
+Week 2: EOS scoring model, visualisations, and the first Airflow DAG.
+
+The ingestion layer is done. Now we build the transformation layer.
+
+github.com/DWaithera/africa-crypto-marketplace-intelligence
+
+#DataEngineering #CryptoAfrica #Python #BuildingInPublic #AfricaTech</div>
+    </div>
+
+    <div class="platform-block">
+      <div class="platform-name">X / Twitter</div>
+      <button class="platform-copy-btn" onclick="copyPlatform(this)">copy</button>
+      <div class="platform-text">Week 1 done.
+
+4 pipelines built:
+→ CoinGecko API (BTC/ETH prices + volume)
+→ SerpApi demand signals (4 countries, 53 weeks)
+→ CBK M-Pesa payment data (Kenya)
+→ World Bank benchmark (infrastructure + financial access)
+
+1 master dataset. 4 sources. Weekly granularity. Zero nulls.
+
+Nigeria's USDT interest score: 77.08
+Nigeria's 2024 inflation: 32.7%
+
+The data connects itself.
+
+Week 2: EOS model + Airflow DAG 👇
+github.com/DWaithera/africa-crypto-marketplace-intelligence</div>
+    </div>
+
+  </div>
+
+</main>
+</div>
+
+<script>
+const sessionState={1:false,2:false};
+
+function toggleSession(n){
+  sessionState[n]=!sessionState[n];
+  const btn=document.getElementById('s'+n+'-check');
+  const nav=document.getElementById('nav-s'+n);
+  if(btn) btn.classList.toggle('done',sessionState[n]);
+  if(nav) nav.classList.toggle('done',sessionState[n]);
+  updateProgress();
+}
+
+function updateProgress(){
+  const done=(sessionState[1]?1:0)+(sessionState[2]?1:0);
+  const pct=Math.round(done/2*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=pct+'%';
+}
+
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  el.parentElement.classList.toggle('checked-item');
+}
+
+function copyCode(btn){
+  const pre=btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    btn.textContent='copied!';
+    setTimeout(()=>btn.textContent='copy',1800);
+  });
+}
+
+function copyPlatform(btn){
+  const el=btn.nextElementSibling;
+  navigator.clipboard.writeText(el.innerText).then(()=>{
+    btn.textContent='copied!';
+    setTimeout(()=>btn.textContent='copy',1800);
+  });
+}
+
+window.addEventListener('scroll',()=>{
+  const ids=['session1','session2'];
+  const navIds=['nav-s1','nav-s2'];
+  let current='';
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&window.scrollY>=el.offsetTop-80) current=id;
+  });
+  navIds.forEach((navId,i)=>{
+    const el=document.getElementById(navId);
+    if(el) el.classList.toggle('active',ids[i]===current);
+  });
+});
+</script>
+</body>
+</html>

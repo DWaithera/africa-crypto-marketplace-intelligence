@@ -1,0 +1,2 @@
+country,avg_monthly_txn_millions,avg_monthly_value_kes_bn,avg_mom_growth_pct,data_period,note
+Kenya,204.2,545.9,0.99,2024 CBK Annual Report,"Used as static infrastructure context, not time-series join"
