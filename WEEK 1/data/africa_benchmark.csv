@@ -1,5 +1,5 @@
 country,country_code,mobile_money_penetration_pct,banked_population_pct,unbanked_population_millions,internet_penetration_pct,smartphone_penetration_pct,crypto_regulation_score,gdp_per_capita_usd,inflation_rate_2024_pct,payment_readiness_raw,payment_readiness_score
-Kenya,KE,73.2,79.4,5.4,29.1,28.4,6,2081,4.9,54.144999999999996,100.0
-Nigeria,NG,42.6,45.3,108.2,55.4,41.2,4,2184,32.7,45.925000000000004,0.0
-Ghana,GH,57.8,58.1,11.7,53.6,38.7,5,2363,23.2,52.97500000000001,85.8
-South Africa,ZA,11.3,85.7,2.1,72.3,91.2,7,7055,4.7,53.69,94.5
+Kenya,KE,73.2,79.4,5.4,29.1,28.4,6,2081,4.9,54.145,56.1
+Nigeria,NG,42.6,45.3,108.2,55.4,41.2,4,2184,32.7,45.925,45.9
+Ghana,GH,57.8,58.1,11.7,53.6,38.7,5,2363,23.2,52.97500000000001,53.9
+South Africa,ZA,11.3,85.7,2.1,72.3,91.2,7,7055,4.7,53.69,46.0
